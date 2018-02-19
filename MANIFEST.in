@@ -1,0 +1,5 @@
+include tox.ini README.rst VERSION.txt CHANGES.txt LOCAL-VERSION
+include src/ps/__init__.py
+include src/ps/ps_shell_log.py
+recursive-include src *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml *.py
+recursive-include tests  *.py

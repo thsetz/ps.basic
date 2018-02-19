@@ -1,0 +1,3 @@
+[console_scripts]
+ps_shell_log = ps.ps_shell_log:main
+
