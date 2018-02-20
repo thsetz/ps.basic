@@ -5,19 +5,20 @@ import os
 MY_PACKAGE_NAME="ps.basic"
 
 PRE_INSTALL_PAKETS        =  ["sphinx devpi-client tox tzlocal   docopt GitPython gitdb smmap pytest-cov urllib3 chardet certifi idna"]
-AURORA_PRE_INSTALL_PAKETS =  ["eggrelease "]
+#AURORA_PRE_INSTALL_PAKETS =  ["eggrelease "]
+AURORA_PRE_INSTALL_PAKETS =  []
 MY_VERSION_NUMBER         =  open("VERSION.txt","r").read().strip()
 
 DEVELOPMENT_DEVPI_USER    = os.environ.get("DEVELOPMENT_DEVPI_USER", None)
 DEVELOPMENT_DEVPI_PASS    = os.environ.get("DEVELOPMENT_DEVPI_PASS", None)
 DEVELOPMENT_DEVPI_HTTPS   = os.environ.get("DEVELOPMENT_DEVPI_HTTPS",None)
-DEVPI_AURORA_USER_HTTPS   = os.environ.get("DEVPI_AURORA_USER_HTTPS",None)
+#DEVPI_AURORA_USER_HTTPS   = os.environ.get("DEVPI_AURORA_USER_HTTPS",None)
 
 
 @task
 def pre_install(ctx): 
   for elem in PRE_INSTALL_PAKETS: 
-                          run("pip install -i %s %s"%(DEVELOPMENT_DEVPI_HTTPS, elem)) 
+                          run("pip install --trusted-host setz.dnshome.de  -i %s %s"%(DEVELOPMENT_DEVPI_HTTPS, elem)) 
   # fsm module needs enhanced things
   #run('pip install pygraphviz --install-option="--include-path=/usr/include/graphviz" --install-option="--library-path=/usr/lib/graphviz"') 
   for elem in AURORA_PRE_INSTALL_PAKETS: 
@@ -38,7 +39,7 @@ def package_install_develop(ctx): run("python setup.py develop", pty=True)
 def clean(ctx):             run("rm -fR *pyc  *log *.db Test_rsync*cfg tests/coverage_data/* tests/junit_data/*") 
 
 @task(pre=[clean])
-def all_clean(ctx):         run("rm -fR  docs/_build docs/LOG LOG parts eggs bin dist build venv .tox develop-eggs") 
+def all_clean(ctx):         run("rm -fR  docs/source/_build docs/source/LOG LOG parts eggs bin dist build venv .tox develop-eggs") 
 
 @task
 def devpi_logoff(ctx):      run("devpi logoff") 
@@ -83,7 +84,7 @@ def doc_test(ctx):
 def doctest(ctx):           run("cd docs;   make doctest", pty=True)
 
 @task(pre=[package_uninstall, package_install])
-def doc(ctx):               run("cd docs; make html", pty=True)
+def doc(ctx):               run("cd docs/source; make html", pty=True)
 
 
 @task(pre=[devpi_login ])

@@ -4,7 +4,9 @@ init:
 	python3 -m venv venv
 	source ./venv/bin/activate && pip install -U setuptools
 	source ./venv/bin/activate && pip install sphinx invoke ipython numpydoc devpi zest.releaser[recommended]
-	source ./venv/bin/activate && pip install matplotlib
+	source ./venv/bin/activate && pip install matplotlib pytest
+	source ./venv/bin/activate && invoke pre-install
+	    
 
 doc:
-	source ./venv/bin/activate && cd docs && make html
+	source ./venv/bin/activate && invoke doc 

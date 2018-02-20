@@ -6,6 +6,7 @@ Home-page: https://vl-pypi.haufe-ep.de/ps/DEVELOPMENT
 Author: Setz
 Author-email: thomas.setz@haufe-lexware.com
 License: UNKNOWN
+Description-Content-Type: UNKNOWN
 Description: Introduction
         ============
         The ps.basic package holds code for the basic building blocks within the "ps".

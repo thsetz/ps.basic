@@ -2,5 +2,5 @@ Version History
 ===============
 
 
-.. include:: ../CHANGES.txt
+.. include:: ../../CHANGES.txt
 
