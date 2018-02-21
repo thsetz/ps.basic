@@ -26,7 +26,7 @@ except IOError:
 
 import sys
 
-INSTALL_REQUIRES=[ 'setuptools', 'docopt', 'pygraphviz' ]
+INSTALL_REQUIRES=[ 'setuptools', 'docopt' ,'pygraphviz'  ]
 
 setup(name='ps.basic',
       version=VERSION + version_suffix,

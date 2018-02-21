@@ -5,7 +5,7 @@ pipeline {
     stages {
         stage('Build') {
             steps { echo 'Building ...' 
-                    sh 'make init || true '
+                    sh 'make init '
                     sh 'make doc'
                   }
         }
