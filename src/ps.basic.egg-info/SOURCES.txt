@@ -20,7 +20,6 @@ src/ps.basic.egg-info/not-zip-safe
 src/ps.basic.egg-info/requires.txt
 src/ps.basic.egg-info/top_level.txt
 src/ps/dummy/__init__.py
-tests/__init__.py
 tests/test_base.py
 tests/test_base2.py
 tests/test_fsm.py

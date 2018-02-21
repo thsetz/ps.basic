@@ -26,11 +26,7 @@ except IOError:
 
 import sys
 
-if  sys.version[:3] == "2.4":
-    # python 2.4 does not like docopt and we already have a fixed version 0.6c11 of setuptools :-<< we work around here
-    INSTALL_REQUIRES=[]
-else:
-    INSTALL_REQUIRES=[ 'setuptools', 'docopt', ]
+INSTALL_REQUIRES=[ 'setuptools', 'docopt', 'pygraphviz' ]
 
 setup(name='ps.basic',
       version=VERSION + version_suffix,
@@ -43,17 +39,15 @@ setup(name='ps.basic',
           'Intended Audience :: DevOps',
           'License :: Other/Proprietary License',
           'Operating System :: POSIX :: Linux',
-          'Programming Language :: Python :: 2.4 :: ',
           'Programming Language :: Python :: 2.7 :: ',
-          'Programming Language :: Python :: 3.2 :: ',
-          'Programming Language :: Python :: 3.4 :: ',
+          'Programming Language :: Python :: 3.6 :: ',
           'Topic :: Software Development :: Build Tools',
           'Topic :: Utilities'
       ],
       keywords='PS',
       author='Setz',
-      author_email='thomas.setz@haufe-lexware.com',
-      url='https://vl-pypi.haufe-ep.de/ps/DEVELOPMENT',
+      author_email='thomas@setz.de',
+      url='https://setz.dnshome.de/setzt/DEVELOPMENT',
       license='',  # need/want 'ZPL'?
       use_2to3=True,
       packages=find_packages('src'),

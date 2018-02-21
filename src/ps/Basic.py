@@ -11,7 +11,7 @@ IS_PY2  = str(sys.version_info[0])   == "2"
 # if 2.4 is not needed any longer we should use int's
 IS_PY24 = sys.version[:3]            == "2.4"
 
-from package_version import version
+from .package_version import version
 
 
 # if IS_PY2:

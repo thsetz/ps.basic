@@ -4,7 +4,7 @@ import os
 
 MY_PACKAGE_NAME="ps.basic"
 
-PRE_INSTALL_PAKETS        =  ["sphinx devpi-client tox tzlocal   docopt GitPython gitdb smmap pytest-cov urllib3 chardet certifi idna"]
+PRE_INSTALL_PAKETS        =  ["sphinx devpi-client tox tzlocal  pygraphviz  docopt GitPython gitdb smmap pytest-cov urllib3 chardet certifi idna"]
 #AURORA_PRE_INSTALL_PAKETS =  ["eggrelease "]
 AURORA_PRE_INSTALL_PAKETS =  []
 MY_VERSION_NUMBER         =  open("VERSION.txt","r").read().strip()
@@ -29,7 +29,7 @@ def pre_install(ctx):
 def package_uninstall(ctx): run("pip uninstall -y %(MY_PACKAGE_NAME)s || true"%(globals()), pty=True)
 
 @task(pre=[package_uninstall])
-def package_install(ctx):   run("python setup.py install", pty=True)
+def package_install(ctx):   run("python setup.py install develop", pty=True)
 
 @task(pre=[package_uninstall])
 def package_install_develop(ctx): run("python setup.py develop", pty=True)

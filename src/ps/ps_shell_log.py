@@ -31,7 +31,7 @@ def main():
     level="info"
     service_name="shell_log"
     options = docopt.docopt(__doc__, version=1)
-    print options
+    sys.stdout.write(options)
     if options["-v"]:                     VERBOSE = True
     if options["--level"] != None:        level=options["--level"]
     if options["--service_name"] != None: service_name=options["--service_name"]

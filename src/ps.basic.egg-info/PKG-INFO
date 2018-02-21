@@ -2,9 +2,9 @@ Metadata-Version: 1.1
 Name: ps.basic
 Version: 0.3.45
 Summary: Basic class used in PS environment
-Home-page: https://vl-pypi.haufe-ep.de/ps/DEVELOPMENT
+Home-page: https://setz.dnshome.de/setzt/DEVELOPMENT
 Author: Setz
-Author-email: thomas.setz@haufe-lexware.com
+Author-email: thomas@setz.de
 License: UNKNOWN
 Description-Content-Type: UNKNOWN
 Description: Introduction
@@ -786,9 +786,7 @@ Classifier: Environment :: Console
 Classifier: Intended Audience :: DevOps
 Classifier: License :: Other/Proprietary License
 Classifier: Operating System :: POSIX :: Linux
-Classifier: Programming Language :: Python :: 2.4 :: 
 Classifier: Programming Language :: Python :: 2.7 :: 
-Classifier: Programming Language :: Python :: 3.2 :: 
-Classifier: Programming Language :: Python :: 3.4 :: 
+Classifier: Programming Language :: Python :: 3.6 :: 
 Classifier: Topic :: Software Development :: Build Tools
 Classifier: Topic :: Utilities
