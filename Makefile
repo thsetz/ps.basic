@@ -1,5 +1,9 @@
 SHELL := /bin/bash
 
+export DEVELOPMENT_DEVPI_USER=setzt
+export DEVELOPMENT_DEVPI_PASS=setzt
+export DEVELOPMENT_DEVPI_HTTPS=http://setz.dnshome.de:4040/setzt/DEVELOPMENT
+
 init:
 	python3 -m venv venv
 	source ./venv/bin/activate && pip install -U setuptools
