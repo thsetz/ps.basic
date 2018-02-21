@@ -36,8 +36,8 @@ config_parser.read(os.path.join(os.path.abspath('.'),"../../setup.cfg"))
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 # sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.join(os.path.abspath('.'), '../../..'))
-sys.path.insert(0, os.path.join(os.path.abspath('.'), '../..'))
-sys.path.insert(0, os.path.join(os.path.abspath('.'), '..'))
+sys.path.insert(1, os.path.join(os.path.abspath('.'), '../..'))
+sys.path.insert(20, os.path.join(os.path.abspath('.'), '..'))
 
 
 

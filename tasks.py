@@ -29,7 +29,7 @@ def pre_install(ctx):
 def package_uninstall(ctx): run("pip uninstall -y %(MY_PACKAGE_NAME)s || true"%(globals()), pty=True)
 
 @task(pre=[package_uninstall])
-def package_install(ctx):   run("python setup.py install develop", pty=True)
+def package_install(ctx):   run("python setup.py install ", pty=True)
 
 @task(pre=[package_uninstall])
 def package_install_develop(ctx): run("python setup.py develop", pty=True)

@@ -1,0 +1,18 @@
+body{font: 76% arial,sans-serif; background:url(tan_paper.gif);}
+img.bg {
+                        /* z-index: 1; */
+                        /* min-width: 1024px; */
+                        /* Set up proportionate scaling */
+                         width: 100%;
+                        height: auto;
+                        filter:alpha(opacity=30);
+                        opacity: .3;
+
+                        /* position: fixed; // wenn nicht mitgescrollt wird*/
+
+                        position: relative;
+                        top: 0;
+                        left: 0;
+                        clear:both;
+}
+
