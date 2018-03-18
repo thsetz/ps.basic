@@ -1,43 +1,19 @@
-""" The Basic Module delivers the *Basis* for Systems in the Haufe world."""
+""" The Basic Module delivers the *Basis* for Systems in the Production Systems world."""
 
 import os
 import logging
 import logging.handlers
 import sys
-
-IS_PY3  = sys.version_info[0]        == 3
-IS_PY2  = str(sys.version_info[0])   == "2"
-
-# if 2.4 is not needed any longer we should use int's
-IS_PY24 = sys.version[:3]            == "2.4"
-
 from .package_version import version
 
 
-# if IS_PY2:
-
-# if IS_PY3:
-
-try:
-    from ConfigParser import SafeConfigParser, ParsingError
-    # from UserDict import UserDict
-    from email.MIMEMultipart import MIMEMultipart
-    from email.MIMEBase import MIMEBase
-    from email.MIMEText import MIMEText
-    from email.Utils import COMMASPACE, formatdate
-    from email import Encoders
-
-except:
-
-    from configparser import ConfigParser as SafeConfigParser
-    from configparser import ParsingError
-    # from collections import UserDict
-    from email.mime.multipart import MIMEMultipart
-    from email.mime.base import MIMEBase
-    from email.mime.text import MIMEText
-    from email.utils import COMMASPACE, formatdate
-    import email.encoders
-
+from configparser import ConfigParser as SafeConfigParser
+from configparser import ParsingError
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
+from email.utils import COMMASPACE, formatdate
+import email.encoders
 from socket import gethostname
 
 from ps.Patterns import LOGGING_PATTERNS, PATTERN_LANGUAGES
@@ -183,7 +159,6 @@ class Basic(object):
         """
         """
 
-        global IS_PY24
         Basic.name                  = project_name_p
         os.environ["SYSTEM_ID"]     = project_name_p
         os.environ["SUB_SYSTEM_ID"] = gethostname()
@@ -233,8 +208,7 @@ class Basic(object):
                 Basic.logger.addHandler(logfile_handler)
 
             Basic.logger.setLevel(Basic.logging_level)
-            if IS_PY24: Basic.logger.debug("Logging initialized for pid %s : version %s" %(os.getpid(),version))
-            else:       Basic.logger.debug("Logging initialized for pid %s"              % (os.getpid()),extra={"package_version":version})
+            Basic.logger.debug("Logging initialized for pid %s"              % (os.getpid()),extra={"package_version":version})
 
             if guarded_by_lockfile:
                 if not os.path.isfile(Basic.lock_filename):
@@ -248,8 +222,7 @@ class Basic(object):
                         sys.stderr.write("Error open/write lockFile %s: EXIT Now" % (Basic.lock_filename))
                         sys.stderr.write(traceback.format_exc())
                         sys.exit(1)
-                    if IS_PY24: Basic.logger.info("system %s started new lock guarded instance on %s: version %s"%(Basic.name, Basic.lock_filename,version))
-                    else:       Basic.logger.info("system %s started new lock guarded instance on %s"             % (Basic.name, Basic.lock_filename),extra={"package_version":version})
+                     Basic.logger.info("system %s started new lock guarded instance on %s"             % (Basic.name, Basic.lock_filename),extra={"package_version":version})
                 else:
                     
                     fp = open(Basic.lock_filename, "r")
@@ -263,11 +236,9 @@ class Basic(object):
                     
                     try:   
                          os.kill(int(pid), 0)
-                         if IS_PY24 :Basic.logger.info("process with pid %s is still alive: version %s"%(pid,version))
-                         else: Basic.logger.info("process with pid %s is still alive" % (pid), extra={"package_version":version})
+                         Basic.logger.info("process with pid %s is still alive" % (pid), extra={"package_version":version})
                     except OSError:
-                         if IS_PY24 :Basic.logger.info("process with pid %s is Not alive: version %s"%(pid,version))
-                         else:       Basic.logger.error("process with pid %s is not alive: Remove it's lock file" % (pid), extra={"package_version":version})
+                         Basic.logger.error("process with pid %s is not alive: Remove it's lock file" % (pid), extra={"package_version":version})
                          sys.stderr.write("process with pid %s is not alive: Remove it's lock file" % (pid))
                          os.remove(Basic.lock_filename)
                     # In any case exit here -next time the lock-file has been gone ...
@@ -279,16 +250,14 @@ class Basic(object):
                 config_file_directory = os.getenv("BASIC_CONFIGFILE_DIR", False)
                 if config_file_directory:
                     if not os.path.isdir(config_file_directory):
-                        if IS_PY24: Basic.logger.fatal("The BASIC_CONFIGFILE_DIR %s does not exist: version %s"%(config_file_directory,version))
-                        else:       Basic.logger.fatal("The BASIC_CONFIGFILE_DIR %s does not exist"%(config_file_directory),extra={"package_version":version})
+                        Basic.logger.fatal("The BASIC_CONFIGFILE_DIR %s does not exist"%(config_file_directory),extra={"package_version":version})
                         sys.stderr.write(
                             "ERROR: The BASIC_CONFIGFILE_DIR %s does not exist. EXIT NOW" % (config_file_directory))
                         self.__exit__( 1,2,3)
                         sys.exit(1)
                     else:
                         Basic.config_file_name = os.path.join(config_file_directory, Basic.name + Basic.suffix + ".cfg")
-                        if IS_PY24:  Basic.logger.info("The config_file was forced  to %s : version %s"%(Basic.config_file_name,version))
-                        else:        Basic.logger.info("The config_file was forced  to %s " % Basic.config_file_name,extra={"package_version":version})
+                        Basic.logger.info("The config_file was forced  to %s " % Basic.config_file_name,extra={"package_version":version})
                 else:
                     Basic.config_file_name = os.path.join(os.getcwd(), Basic.name + Basic.suffix + ".cfg")
 
@@ -325,8 +294,7 @@ class Basic(object):
                     try:
                         Basic.primary_herald_url = Basic.config_parser.get("GLOBAL", 'herald_url')
                     except:
-                        if IS_PY24: Basic.logger.fatal( "Value of herald_url in GLOBAL section of %s not given - but needed. EXIT NOW: version %s"%(Basic.config_file_name,version))
-                        else:       Basic.logger.fatal( "Value of herald_url in GLOBAL section of %s not given - but needed. EXIT NOW"%(Basic.config_file_name),extra={"package_version":version})
+                        Basic.logger.fatal( "Value of herald_url in GLOBAL section of %s not given - but needed. EXIT NOW"%(Basic.config_file_name),extra={"package_version":version})
                         sys.stderr.write("Value of herald_url GLOBAL section of %s not given. EXIT NOW" % Basic.config_file_name)
                         self.__exit__( 1,2,3)
                         sys.exit(1)
@@ -334,16 +302,13 @@ class Basic(object):
                 try:
                     PATTERN_LANGUAGE = Basic.config_parser.get("GLOBAL", 'pattern_language')
                     if PATTERN_LANGUAGE not in PATTERN_LANGUAGES:
-                        if IS_PY24: Basic.logger.fatal( "Value of pattern_language in GLOBAL section of %s not allowed. EXIT NOW: version %s"%(Basic.config_file_name,version))
-                        else:       Basic.logger.fatal( "Value of pattern_language in GLOBAL section of %s not allowed. EXIT NOW" % Basic.config_file_name,extra={"package_version":version})
+                        Basic.logger.fatal( "Value of pattern_language in GLOBAL section of %s not allowed. EXIT NOW" % Basic.config_file_name,extra={"package_version":version})
                         sys.stderr.write("Value of pattern_language in GLOBAL section of %s not allowed. EXIT NOW" % Basic.config_file_name)
                         self.__exit__( 1,2,3)
                         sys.exit(1)
                 except:
                     PATTERN_LANGUAGE = "EN"
-                    #Basic.logger.debug(
-                    if IS_PY24: Basic.logger.debug( template_writer(LOGGING_PATTERNS, PATTERN_LANGUAGE, "LANGUAGE_PATTERN_FAILED", locals()))
-                    else:       Basic.logger.debug( template_writer(LOGGING_PATTERNS, PATTERN_LANGUAGE, "LANGUAGE_PATTERN_FAILED", locals()),extra={"package_version":version})
+                    Basic.logger.debug( template_writer(LOGGING_PATTERNS, PATTERN_LANGUAGE, "LANGUAGE_PATTERN_FAILED", locals()),extra={"package_version":version})
 
 
 
@@ -356,8 +321,7 @@ class Basic(object):
                         if name == "LOGGING": Basic.logger.setLevel(int(value))
                 html_string += "</table>"
                 if html_string != "<table></table>" or Basic.name == "Tests":
-                     if IS_PY24: Basic.logger.debug(html_string)
-                     else:       Basic.logger.debug(html_string,extra={"package_version":version})
+                     Basic.logger.debug(html_string,extra={"package_version":version})
 
 
     @classmethod
@@ -376,8 +340,7 @@ class Basic(object):
           try:
             import os
             if os.path.isfile(self.lock_filename):
-                if IS_PY24: Basic.logger.debug("remove lock_file %s: version %s"%(self.lock_filename, version))
-                else:       Basic.logger.debug("remove lock_file %s"%(self.lock_filename), extra={"package_version":version})
+                Basic.logger.debug("remove lock_file %s"%(self.lock_filename), extra={"package_version":version})
                 os.unlink(self.lock_filename)
           except:
             Basic.logger.exception("remove log_file: version %s"%(version))
@@ -386,8 +349,7 @@ class Basic(object):
             import traceback
             sys.stderr.write(traceback.print_exc())
         else:
-            if IS_PY24: Basic.logger.error("remove log_file Leave Singleton with nonstandard __exit__: version %s"%(version))
-            else:       Basic.logger.error("remove log_file Leave Singleton with nonstandard __exit__", extra={"package_version":version})
+            Basic.logger.error("remove log_file Leave Singleton with nonstandard __exit__", extra={"package_version":version})
             sys.stderr.write("Leave Singleton with nonstandard __exit__")
          
 
@@ -475,8 +437,7 @@ def ps_shell(cmd_p, env_p=None):
         success = "ERROR"
     logger.debug("%s %s %s " % (success, time_needed, cmd_p),extra={"package_version":version})
     if exitcode != 0:
-        if IS_PY24: logger.error("%d %s version: %s" % (int(exitcode), stderr, version))
-        else:       logger.error("%d %s" % (int(exitcode), stderr),extra={"package_version":version})
+        logger.error("%d %s" % (int(exitcode), stderr),extra={"package_version":version})
 
     return (
         str(stdout).strip().split("\n"),
@@ -490,8 +451,7 @@ def send_a_mail(sent_from, l_send_to_p, subject, text, files=[], server="localho
     assert isinstance(l_send_to_p, list)
     assert isinstance(files, list)
     logger = Basic.logger
-    if IS_PY24: logger.debug("TRY send_mail FROM " + sent_from + " TO " + str(l_send_to_p) + " subject " + subject)
-    else:       logger.debug("TRY send_mail FROM " + sent_from + " TO " + str(l_send_to_p) + " subject " + subject,extra={"package_version":version})
+    logger.debug("TRY send_mail FROM " + sent_from + " TO " + str(l_send_to_p) + " subject " + subject,extra={"package_version":version})
 
     msg = MIMEMultipart('alternative')
     msg['From'] = sent_from
@@ -524,37 +484,25 @@ def send_a_mail(sent_from, l_send_to_p, subject, text, files=[], server="localho
                      Basic.curr_mail_subject     = subject
                      Basic.curr_mail_text        = text  
 
-        if IS_PY24: 
-          logger.debug("SUCC send_mail FROM " + sent_from + " TO " + \
-                         str(l_send_to_p) + " subject " + subject)
-        else:       
-          logger.debug("SUCC send_mail FROM " + sent_from + " TO " + \
+        logger.debug("SUCC send_mail FROM " + sent_from + " TO " + \
                          str(l_send_to_p) + " subject " + \
                          subject,extra={"package_version":version})
     except:
-        if IS_PY24: 
-          logger.error("FAILURE send_mail FROM " + sent_from + " TO " + \
-                         str(l_send_to_p) + " subject " + subject,exc_info=True)
-        else: logger.error("FAILURE send_mail FROM " + sent_from + " TO " + \
+        logger.error("FAILURE send_mail FROM " + sent_from + " TO " + \
                          str(l_send_to_p) + " subject " + subject,
                          exc_info=True,extra={"package_version":version})
         sys.stdout.write("Exception Sending Email")
         try:
              
-            if IS_PY24: logger.debug("Try To send via shell mail")
-            else:       logger.debug("Try To send via shell mail",
-                                      extra={"package_version":version})
+            logger.debug("Try To send via shell mail", extra={"package_version":version})
             for dst in l_send_to_p:
                 cmd = ' echo "%s" | mail -s "%s" %s' % (text, subject, dst)
-                if IS_PY24: logger.debug("Try to send mail via shell %s: version %s"%(cmd ,version))
-                else:       logger.debug("Try to send mail via shell %s" % (cmd),extra={"package_version":version})
+                logger.debug("Try to send mail via shell %s" % (cmd),extra={"package_version":version})
                 o, e, ex, t = ps_shell(cmd)
                 if int(ex) > 0:
-                    if IS_PY24: logger.error("FAILURE Mail via shell, version: %s"%(version))
-                    else:       logger.error("FAILURE Mail via shell",extra={"package_version":version})
+                    logger.error("FAILURE Mail via shell",extra={"package_version":version})
                 else:
-                    if IS_PY24: logger.info("SUCCESS Mail via shell to %s: version %s"%(dst,version))
-                    else:       logger.info("SUCCESS Mail via shell to %s"%(dst),extra={"package_version":version})
+                    logger.info("SUCCESS Mail via shell to %s"%(dst),extra={"package_version":version})
         except:
            logger.error("FAILURE send_mail via shell FROM " + send_from + " TO " + str(l_send_to_p) + " subject " + subject)
 
@@ -633,8 +581,7 @@ class EXEC(object):
 
         cmd = "%(curr_cmd)s" % (self.data)
 
-        if IS_PY24: self.logger.debug("%s execute Command %s: version : %s"%(Basic.name, cmd,version))
-        else:       self.logger.debug("%s execute Command %s" % (Basic.name, cmd),extra={"package_version":version})
+        self.logger.debug("%s execute Command %s" % (Basic.name, cmd),extra={"package_version":version})
         self.stdout, self.stderr, self.exitcode, self.timings = ps_shell(cmd)
         if self.exitcode != 0:
             self.logger.error("%s stdout %s: version %s" % (Basic.name, self.stdout,version))
