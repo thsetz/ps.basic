@@ -1,12 +1,9 @@
 from unittest import TestCase
 import os, sys, pytest,time
-from ps.Basic import Basic, DEV_STAGES, hms_string, ps_shell, template_writer, EXEC, IS_PY2, IS_PY3 , get_html_string
+from ps.Basic import Basic, DEV_STAGES, hms_string, ps_shell, template_writer, EXEC,  get_html_string
 from ps.Basic import send_a_mail
 
-if IS_PY2:
-  from ConfigParser import ParsingError
-else:
-  from configparser import ParsingError
+from configparser import ParsingError
 
 
 class TestBasic(TestCase):

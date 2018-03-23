@@ -119,7 +119,8 @@ todo_include_todos = True
 # a list of builtin themes.
 #
 html_theme      = 'setz_theme'
-html_theme      = 'alabaster'
+#html_theme      = 'alabaster'
+html_theme      = 'classic'
 html_theme_path = ['.']
 
 
@@ -129,8 +130,8 @@ html_theme_path = ['.']
 #
 # html_theme_options = {}
 html_theme_options = {
-    "rightsidebar": "true",
-    "relbarbgcolor": "black"
+  #  "rightsidebar": "true",
+  #  "relbarbgcolor": "black"
 }
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

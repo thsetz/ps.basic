@@ -96,7 +96,8 @@ def ppush(ctx):
     run("devpi push %s==%s ps/PRODUCTION"%(MY_PACKAGE_NAME,MY_VERSION_NUMBER), pty=True)
 
 
-@task(pre=[clean, package_uninstall, package_install,  devpi_logoff, devpi_login, devpi_test])
+#@task(pre=[clean, package_uninstall, package_install,  devpi_logoff, devpi_login, devpi_test])
+@task(pre=[clean, package_uninstall, package_install,  devpi_logoff, devpi_login])
 def upload(ctx):            run("devpi upload --with-docs", pty=True)
 
 @task(pre=[devpi_test, devpi_login ], post=[upload,doc_test])

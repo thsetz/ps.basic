@@ -1,23 +1,16 @@
 # psf: ta=4, -*-Python-*-, vi: set et ts=4: coding: utf-8
-__doc__ = """
-  ps_shell_log writes strings to the ps logging of the DEV_STAGE 
+__doc__ = """ps_shell_log writes strings to the ps logging of the DEV_STAGE 
 
-
-  Usage:
-        ps_shell_log [-v] [ --level=LEVEL ] [ --service_name=name ] TEXT...
+  Usage: ps_shell_log [-v] [ --level=LEVEL ] [ --service_name=name ] TEXT ...
 
   Arguments:
-
     TEXT  Message to be printed
 
   Options:
-
     -h --help             Show this screen.
     -v                    verbose
     --level=LEVEL         LogLevel (DEBUG,INFO,ERROR,WARNING,FATAL) 
     -service_name=value   the system_id of the message  
-
-
 
 """
 import sys

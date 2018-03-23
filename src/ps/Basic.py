@@ -222,7 +222,7 @@ class Basic(object):
                         sys.stderr.write("Error open/write lockFile %s: EXIT Now" % (Basic.lock_filename))
                         sys.stderr.write(traceback.format_exc())
                         sys.exit(1)
-                     Basic.logger.info("system %s started new lock guarded instance on %s"             % (Basic.name, Basic.lock_filename),extra={"package_version":version})
+                    Basic.logger.info("system %s started new lock guarded instance on %s"             % (Basic.name, Basic.lock_filename),extra={"package_version":version})
                 else:
                     
                     fp = open(Basic.lock_filename, "r")
@@ -358,34 +358,6 @@ class Basic(object):
         if Basic.i_have_lock: self.__exit__(1, 2, 3)
 
 
-class ForDemonstration(object):
-    """
-    This class is for demonstration only. It will appear in the sphinx documentation -
-    so will the doctest below.
-    """
-
-    def __init__(self, **kw):
-        for item, value in kw.iteritems():
-            setattr(self, item, value)
-
-    def foo(self, **my_dict):
-        """
-    :arguments: The arguments
-
-    **Usage**
-
-    >>> from ps.Basic import ForDemonstration
-    >>> obj = ForDemonstration(a=1,b=2)
-    >>> obj.foo()
-    "{'a': 1, 'b': 2}"
-    """
-        d = {}
-        for prop in self.__dict__:
-            if not prop.startswith("_"):
-                d[prop] = getattr(self, prop)
-        return str(d)
-
-
 import sys
 import time
 import logging
@@ -399,7 +371,7 @@ def get_html_string(var_p ):
    """ return html table structure for a data structure (currently only dict) ."""
 
    html_string = "<table>"
-   for name, value in var_p.iteritems():
+   for name, value in var_p.items():
      if type(value) is dict:
          html_string += "<tr><td>%s</td><td>%s</td></tr>" % (str(name), get_html_string(value))
      else:
@@ -416,10 +388,7 @@ def ps_shell(cmd_p, env_p=None):
     success = "SUCCESS"
     try:
         start_time = time.time()
-        if IS_PY3 :
-          child = Popen(cmd_p, shell=True, stdout=PIPE, stderr=PIPE, env=env_p, universal_newlines=True)
-        else:
-          child = Popen(cmd_p, shell=True, stdout=PIPE, stderr=PIPE, env=env_p)
+        child = Popen(cmd_p, shell=True, stdout=PIPE, stderr=PIPE, env=env_p, universal_newlines=True)
         (stdout, stderr) = child.communicate()
         exitcode = child.poll()
         end_time = time.time()
@@ -465,8 +434,7 @@ def send_a_mail(sent_from, l_send_to_p, subject, text, files=[], server="localho
     for f in files:
         part = MIMEBase('application', "octet-stream")
         part.set_payload(open(f, "rb").read())
-        if IS_PY2: Encoders.encode_base64(part)
-        if IS_PY3: email.encoders.encode_base64(part)
+        email.encoders.encode_base64(part)
         part.add_header(
             'Content-Disposition', 'attachment; filename="%s"' %
                                    os.path.basename(f))

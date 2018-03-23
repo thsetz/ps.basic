@@ -1,6 +1,6 @@
 from unittest import TestCase
 import os, sys
-from ps.Basic import Basic, DEV_STAGES, hms_string, ps_shell, template_writer, EXEC, IS_PY2, IS_PY3 , get_html_string
+from ps.Basic import Basic, DEV_STAGES, hms_string, ps_shell, template_writer, EXEC,  get_html_string
 from ps.fsm import FiniteStateMachine, State, get_graph, TransitionError, StateError, FSMError
 
 class TestFSM(TestCase):

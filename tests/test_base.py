@@ -1,6 +1,6 @@
 from unittest import TestCase
 import os, sys, pytest,time
-from ps.Basic import Basic, DEV_STAGES, hms_string, ps_shell, template_writer, EXEC, IS_PY2, IS_PY3 , get_html_string
+from ps.Basic import Basic, DEV_STAGES, hms_string, ps_shell, template_writer, EXEC,  get_html_string
 from ps.Basic import send_a_mail
 
 class TestBasic(TestCase):
@@ -138,9 +138,6 @@ class TestBasic(TestCase):
             os.environ["DEV_STAGE"] = stage
             b = Basic.get_instance("Tests", guarded_by_lockfile=True)
             stdou, stder, exitcode, time_needed = ps_shell("ls -1")
-            if IS_PY2:
-                assert ("LOG" in stdou)
-                assert ([''] == stder)
             assert (0 == exitcode)
             assert ("00:00:00" <= time_needed)
             assert ("00:00:10" > time_needed)
@@ -152,8 +149,6 @@ class TestBasic(TestCase):
             b = Basic.get_instance("Tests", guarded_by_lockfile=True)
             stdou, stder, exitcode, time_needed = ps_shell("Unmoegliches Kommando")
             b.__exit__(1, 2, 3)
-            if IS_PY2:
-                assert (stdou == [''])
             assert ([''] != stder)
             assert (exitcode != 0)
             assert ("00:00:00" <= time_needed)
