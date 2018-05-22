@@ -34,13 +34,12 @@ setup(name='ps.basic',
       long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("CHANGES.txt")).read(),
       classifiers=[
-          'Development Status :: 5 - Stable',
+          #'Development Status :: 5 - Stable',
           'Environment :: Console',
-          'Intended Audience :: DevOps',
+          #'Intended Audience :: DevOps',
           'License :: Other/Proprietary License',
           'Operating System :: POSIX :: Linux',
-          'Programming Language :: Python :: 2.7 :: ',
-          'Programming Language :: Python :: 3.6 :: ',
+          #'Programming Language :: Python :: 3.6 :: ',
           'Topic :: Software Development :: Build Tools',
           'Topic :: Utilities'
       ],

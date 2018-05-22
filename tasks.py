@@ -5,14 +5,11 @@ import os
 MY_PACKAGE_NAME="ps.basic"
 
 PRE_INSTALL_PAKETS        =  ["sphinx devpi-client tox tzlocal  pygraphviz  docopt GitPython gitdb smmap pytest-cov urllib3 chardet certifi idna"]
-#AURORA_PRE_INSTALL_PAKETS =  ["eggrelease "]
-AURORA_PRE_INSTALL_PAKETS =  []
 MY_VERSION_NUMBER         =  open("VERSION.txt","r").read().strip()
 
 DEVELOPMENT_DEVPI_USER    = os.environ.get("DEVELOPMENT_DEVPI_USER", None)
 DEVELOPMENT_DEVPI_PASS    = os.environ.get("DEVELOPMENT_DEVPI_PASS", None)
 DEVELOPMENT_DEVPI_HTTPS   = os.environ.get("DEVELOPMENT_DEVPI_HTTPS",None)
-#DEVPI_AURORA_USER_HTTPS   = os.environ.get("DEVPI_AURORA_USER_HTTPS",None)
 
 
 @task
@@ -21,9 +18,7 @@ def pre_install(ctx):
                           run("pip install --trusted-host setz.dnshome.de  -i %s %s"%(DEVELOPMENT_DEVPI_HTTPS, elem)) 
   # fsm module needs enhanced things
   #run('pip install pygraphviz --install-option="--include-path=/usr/include/graphviz" --install-option="--library-path=/usr/lib/graphviz"') 
-  for elem in AURORA_PRE_INSTALL_PAKETS: 
-                          run("pip install -i %s %s"%(DEVPI_AURORA_USER_HTTPS, elem)) 
-                          run('mkdir -p tests/junit_data ; mkdir -p tests/coverage_data', pty=True )
+  run('mkdir -p tests/junit_data ; mkdir -p tests/coverage_data', pty=True )
 
 @task
 def package_uninstall(ctx): run("pip uninstall -y %(MY_PACKAGE_NAME)s || true"%(globals()), pty=True)

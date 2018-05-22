@@ -29,7 +29,7 @@ def main():
     if options["--level"] != None:        level=options["--level"]
     if options["--service_name"] != None: service_name=options["--service_name"]
 
-    HCN = Basic.get_instance(service_name, have_config_file=False)
+    the_singleton = Basic.get_instance(service_name, have_config_file=False)
     try:
        exec('Basic.logger.%s("%s",extra={"package_version":"%s")'%(level.lower(),options['TEXT'],str(version)))
     except:

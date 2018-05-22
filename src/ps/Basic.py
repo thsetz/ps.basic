@@ -25,20 +25,19 @@ PATTERN_LANGUAGE                    = "EN"
 DEV_STAGES = {'TESTING': {'suffix': '_t', 'logging_port': 9010,
                           'logging_bridge_port': 9011,
                           'logging_level': logging.DEBUG,
-                          'l_admin_mail': ['thomas.setz@haufe-lexware.com'], },
+                          'l_admin_mail': ['test@somewhere.com'], },
               'DEVELOPMENT': {'suffix': '_d', 'logging_port': 9020,
                               'logging_bridge_port': 9019,
                               'logging_level': logging.DEBUG,
-                              'l_admin_mail': ['thomas.setz@haufe-lexware.com'], },
+                              'l_admin_mail': ['d_test@somewhere.com'], },
               'INTEGRATION': {'suffix': '_i', 'logging_port': 9022,
                               'logging_bridge_port': 9018,
                               'logging_level': logging.DEBUG,
-                              'l_admin_mail': ['jasminka_matateic@haufe-lexware.com',
-                                               'thomas.setz@haufe-lexware.com'], },
+                              'l_admin_mail': ['itest@somewhere.com'], },
               'PRODUCTION': {'suffix': '', 'logging_port': 9024,
                              'logging_bridge_port': 9017,
                              'logging_level': logging.DEBUG,
-                             'l_admin_mail': ['_HCN_Produktion@haufe-lexware.com'], },
+                             'l_admin_mail': ['production@somewhere.com'], },
               }
 
 
@@ -67,7 +66,7 @@ class ContextFilter(logging.Filter):
 
 
 class Basic(object):
-    """The Basic Class delivers the *Basis* for Systems in the HCN world.
+    """The Basic Class delivers the *Basis* for Systems in the Production System  world.
 
        It enforces the same patterns for:
          - logging
@@ -528,7 +527,7 @@ class EXEC(object):
 
     """
 
-    def __init__(self, hcn_p, dictionary=None):
+    def __init__(self, sys_p, dictionary=None):
         # UserDict.__init__(self)
         self.logger = Basic.logger
         self.data = {}
