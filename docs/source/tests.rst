@@ -25,7 +25,7 @@ tests.test_basics module
 Module contents
 ---------------
 
-.. automodule:: tests
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. .. automodule:: tests
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:

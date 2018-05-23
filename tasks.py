@@ -95,6 +95,9 @@ def ppush(ctx):
 @task(pre=[clean, package_uninstall, package_install,  devpi_logoff, devpi_login])
 def upload(ctx):            run("devpi upload --with-docs", pty=True)
 
+@task(pre=[clean, package_uninstall, package_install,  devpi_logoff, devpi_login])
+def upload_test(ctx):            run("python3 setup.py sdist bdist_wheel", pty=True)
+
 @task(pre=[devpi_test, devpi_login ], post=[upload,doc_test])
 def eggrelease(ctx): 
                          run("eggrelease -d   --server=%s --user=%s \
