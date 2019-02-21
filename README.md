@@ -1,5 +1,3 @@
-# My project's README
-
 # Introduction
 
 The ps.basic package holds code for the basic building blocks within the "ps".
@@ -25,6 +23,4 @@ These are:
 
 The usage of this package is closely related to the usage of the ps.herald package with adds a (via ssh tunnels distributed usable)
 monitoring environment based on the here implemented Basics.
-
-
 
