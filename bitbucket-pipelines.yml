@@ -12,8 +12,10 @@ pipelines:
           - pip
         script: # Modify the commands below to build your repository.
           - uname -a
-          - apt-get install -vvv graphviz-dev
+          - apt-get install  graphviz
           - ls /usr/local/bin
+          - ls /usr/bin
+          - ls /bin
           - export PATH=/usr/local/bin/:$PATH
           - echo $PATH
           - pip install -r requirements.txt
