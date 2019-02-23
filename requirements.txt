@@ -11,4 +11,4 @@ pytest-xdist
 pytest-bdd
 invoke
 docopt
-
+bump2version
