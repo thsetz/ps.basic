@@ -11,15 +11,7 @@ pipelines:
         caches:
           - pip
         script: # Modify the commands below to build your repository.
-          - uname -a
-          - apt-get update && apt-get install -y graphviz 
-          - dot -V
-          - apt-get install  graphviz-dev
-          - ls /usr/local/bin
-          - ls /usr/bin
-          - ls /bin
-          - export PATH=/usr/local/bin/:$PATH
-          - echo $PATH
+          - apt-get update && apt-get install -y graphviz-dev
           - pip install -r requirements.txt
           - python setup.py install
           - python -m pytest --cov=ps --cov-report=term tests/*.py
