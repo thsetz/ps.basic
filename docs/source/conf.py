@@ -119,8 +119,8 @@ todo_include_todos = True
 # a list of builtin themes.
 #
 #html_theme      = 'setz_theme'
-#html_theme      = 'alabaster'
-html_theme      = 'classic'
+html_theme      = 'alabaster'
+#html_theme      = 'classic'
 #html_theme      = 'sphinx_rtd_theme'
 #html_theme_path = ['.']
 

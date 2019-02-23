@@ -22,5 +22,5 @@ pipelines:
           - echo $PATH
           - pip install -r requirements.txt
           - python setup.py install
-          - py.test tests/*.py
+          - python -m pytest --cov=ps --cov-report=term tests/*.py
           - cd docs/source; make html
