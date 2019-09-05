@@ -4,7 +4,8 @@ pipeline {
     stages {
         stage('Build') {
             steps { echo 'Building ...' 
-                    sh 'make init '
+                    sh 'pip install --upgrade pip'
+                    //sh 'make init '
                     sh 'make doc'
                   }
         }

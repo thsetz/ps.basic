@@ -11,7 +11,8 @@ init:
 	source ./venv/bin/activate && pip3 install -U pytest
 	source ./venv/bin/activate && pip3 install sphinx invoke ipython numpydoc devpi zest.releaser[recommended]
 	source ./venv/bin/activate && pip3 install matplotlib pytest docopt 
-	source ./venv/bin/activate && pip3 install --install-option="--include-path=/usr/local/include/" --install-option="--library-path=/usr/local/lib/" pygraphviz
+	#source ./venv/bin/activate && pip3 install --install-option="--include-path=/usr/local/include/" --install-option="--library-path=/usr/local/lib/" pygraphviz
+	source ./venv/bin/activate && pip3 install git+https://github.com/pygraphviz/pygraphviz.git --install-option="--include-path=/usr/include/graphviz" --install-option="--library-path=/usr/lib/graphviz/"
 	source ./venv/bin/activate && pip3 install zest.releaser[recommended]
 	#source ./venv/bin/activate && invoke pre-install
 	    
