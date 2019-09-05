@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Unit Test') {
             steps { echo 'Unit Testing..'
-                    sh 'source ./venv/bin/activate && invoke unit-test'
+                    sh 'make unit_test'
                   }
         }
         stage('docTest') {

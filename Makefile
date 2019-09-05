@@ -17,5 +17,8 @@ init:
 	source ./venv/bin/activate && invoke pre-install
 	    
 
+unit_test:
+	source ./venv/bin/activate && invoke unit-test
+
 doc:
 	source ./venv/bin/activate && invoke doc 
