@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Deploy') {
             steps { echo 'Deploying....' 
-                    sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && twine upload --repository-url https://test.pypi.org/legacy/ dist/* '
+                    sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && twine upload -u thsetz -p passPypi123456789012 --repository-url https://test.pypi.org/legacy/ dist/* '
                   }
         }
     }
