@@ -37,7 +37,6 @@ pipeline {
                     sh 'git commit -m"autocommit from ci"  VERSION.txt'
                     //# remove the old egg
                     sh '/bin/rm dist/* '
-                    sh 'ls dist/*'
                     //# create a new  egg (with the new version number)
                     sh 'make doc '
                     sh 'ls dist/*'
