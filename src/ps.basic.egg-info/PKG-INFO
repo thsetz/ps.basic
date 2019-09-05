@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: ps.basic
-Version: 1.0.1
+Version: 1.1.2
 Summary: Basic class used in PS environment
 Home-page: https://setz.dnshome.de/setzt/DEVELOPMENT
 Author: Setz
@@ -39,6 +39,8 @@ Description: Introduction
         2018-01-10 17:34:53 MEZ  Prodstrecke (Integration)
             enhance documentation
         
+        
+        sjha
         
 Keywords: PS
 Platform: UNKNOWN

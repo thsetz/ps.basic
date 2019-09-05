@@ -4,7 +4,6 @@ README.rst
 VERSION.txt
 setup.cfg
 setup.py
-tox.ini
 src/ps/Basic.py
 src/ps/Patterns.py
 src/ps/__init__.py
