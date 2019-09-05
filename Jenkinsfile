@@ -24,6 +24,7 @@ pipeline {
         }
         stage('Deploy') {
             steps { echo 'Deploying....' 
+                    sh 'git checkout master'
                     sh 'git status'
                     sh 'ls dist/*'
                     //# set default values for git
