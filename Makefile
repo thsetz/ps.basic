@@ -17,6 +17,9 @@ init:
 	source ./venv/bin/activate && invoke pre-install
 	    
 
+upgrade:
+	source ./venv/bin/activate && pip install --upgrade pip
+
 unit_test:
 	source ./venv/bin/activate && invoke unit-test
 

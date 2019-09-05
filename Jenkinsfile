@@ -7,7 +7,7 @@ pipeline {
             steps { echo 'Building ...' 
                     //sh 'sudo apt install python-pydot python-pydot-ng graphviz'
                     sh 'uname -a'
-                    sh 'source ./venv/bin/activate && pip install --upgrade pip'
+                    sh 'make upgrade'
                     sh 'make init '
                   }
         }
