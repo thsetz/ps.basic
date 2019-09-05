@@ -14,6 +14,7 @@ pipeline {
         stage('Unit Test') {
             steps { echo 'Unit Testing..'
                     sh 'make unit_test'
+                    sh 'make coverage'
                   }
         }
         stage('docTest') {

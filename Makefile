@@ -22,6 +22,8 @@ init:
 upgrade:
 	source ./venv/bin/activate && pip install --upgrade pip
 
+coverage:
+	source ./venv/bin/activate &&  python -m pytest --cov=ps --cov-report=term tests/*.py
 unit_test:
 	source ./venv/bin/activate && invoke unit-test
 	source ./venv/bin/activate && invoke doctest
