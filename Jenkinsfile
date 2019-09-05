@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps { echo 'Building ...' 
+                    sh 'sudo apt install python-pydot python-pydot-ng graphviz'
                     sh 'pip install --upgrade pip'
                     //sh 'make init '
                     sh 'make doc'
