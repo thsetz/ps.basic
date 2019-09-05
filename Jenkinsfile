@@ -7,21 +7,24 @@ pipeline {
             steps { echo 'Building ...' 
                     //sh 'sudo apt install python-pydot python-pydot-ng graphviz'
                     sh 'uname -a'
-                    sh 'pip install --upgrade pip'
+                    sh 'source ./venv/bin/activate && pip install --upgrade pip'
                     sh 'make init '
                   }
         }
         stage('Unit Test') {
-            steps { echo 'Unit Testing..' }
+            steps { echo 'Unit Testing..'
+                    sh '
+                  }
         }
         stage('docTest') {
             steps { echo 'doc Testing..' 
                     sh 'make doc'
+                    sh 'source ./venv/bin/activate && invoke unit-test'
             }
         }
         stage('Deploy') {
             steps { echo 'Deploying....' 
-                    sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && devpi use http://setz.dnshome.de:4040/setzt/DEVELOPMENT && devpi login setzt --password setzt && devpi upload --with-docs'
+                    //sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && devpi use http://setz.dnshome.de:4040/setzt/DEVELOPMENT && devpi login setzt --password setzt && devpi upload --with-docs'
                   }
         }
     }
