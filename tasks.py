@@ -15,7 +15,8 @@ DEVELOPMENT_DEVPI_HTTPS   = os.environ.get("DEVELOPMENT_DEVPI_HTTPS",None)
 @task
 def pre_install(ctx): 
   for elem in PRE_INSTALL_PAKETS: 
-                          run("pip install --trusted-host setz.dnshome.de  -i %s %s"%(DEVELOPMENT_DEVPI_HTTPS, elem)) 
+                          #run("pip install --trusted-host setz.dnshome.de  -i %s %s"%(DEVELOPMENT_DEVPI_HTTPS, elem)) 
+                          run("pip install  %s"%( elem)) 
   # fsm module needs enhanced things
   #run('pip install pygraphviz --install-option="--include-path=/usr/include/graphviz" --install-option="--library-path=/usr/lib/graphviz"') 
   run('mkdir -p tests/junit_data ; mkdir -p tests/coverage_data', pty=True )
