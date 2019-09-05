@@ -18,4 +18,4 @@ pipelines:
           - python -m pytest --cov=ps --cov-report=term tests/*.py
           - cd docs/source; make html
           - cd ../..
-          - twine upload --repository-url https://test.pypi.org/legacy/ -u ${TEST_PYPI_USERNAME}  -p  ${TEST_PYPI_PASS} dist/*
+          - # twine upload --repository-url https://test.pypi.org/legacy/ -u ${TEST_PYPI_USERNAME}  -p  ${TEST_PYPI_PASS} dist/*
