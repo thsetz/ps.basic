@@ -4,7 +4,8 @@ import os
 
 MY_PACKAGE_NAME="ps.basic"
 
-PRE_INSTALL_PAKETS        =  ["sphinx devpi-client tox tzlocal  pygraphviz  docopt GitPython gitdb smmap pytest-cov urllib3 chardet certifi idna"]
+#PRE_INSTALL_PAKETS        =  ["sphinx devpi-client tox tzlocal  pygraphviz  docopt GitPython gitdb smmap pytest-cov urllib3 chardet certifi idna"]
+PRE_INSTALL_PAKETS        =  ["sphinx devpi-client tox tzlocal  ocopt GitPython gitdb smmap pytest-cov urllib3 chardet certifi idna"]
 MY_VERSION_NUMBER         =  open("VERSION.txt","r").read().strip()
 
 DEVELOPMENT_DEVPI_USER    = os.environ.get("DEVELOPMENT_DEVPI_USER", None)
