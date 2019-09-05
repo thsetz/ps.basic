@@ -1,6 +1,7 @@
 #!/usr/bin/env groovy
 pipeline {
-    agent { docker { image 'python:3.7' } }
+    //agent { docker { image 'python:3.7' } }
+    agent { docker { image 'drsetz/python-with-graphviz:3.7.1' } }
     stages {
         stage('Build') {
             steps { echo 'Building ...' 
