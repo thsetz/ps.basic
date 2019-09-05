@@ -36,7 +36,7 @@ def package_install_develop(ctx): run("python setup.py develop", pty=True)
 def clean(ctx):             run("rm -fR *pyc  *log *.db Test_rsync*cfg tests/coverage_data/* tests/junit_data/*") 
 
 @task(pre=[clean])
-def all_clean(ctx):         run("rm -fR  docs/source/_build docs/source/LOG LOG parts eggs bin dist build venv .tox develop-eggs") 
+def all_clean(ctx):         run("rm -fR  docs/source/_build docs/source/LOG LOG parts eggs bin dist build .tox develop-eggs") 
 
 @task
 def devpi_logoff(ctx):      run("devpi logoff") 
@@ -78,7 +78,7 @@ def doc_test(ctx):
 #                         run("coverage xml -i && mv coverage.xml tests/coverage_data/base_coverage.xml")
 
 @task(pre=[package_uninstall, package_install])
-def doctest(ctx):           run("cd docs;   make doctest", pty=True)
+def doctest(ctx):           run("cd docs/source;   make doctest", pty=True)
 
 @task(pre=[package_uninstall, package_install])
 def doc(ctx):               run("cd docs/source; make html", pty=True)

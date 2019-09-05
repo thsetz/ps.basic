@@ -83,8 +83,8 @@ class Basic(object):
        >>> dev_stage='DEVELOPMENT'
        >>> os.environ["DEV_STAGE"]=dev_stage    # DEV_STAGE has to be defined in the environment. Error else
        >>> fp=open(os.path.join("/tmp", project_name + "_d.cfg"),"w") # configuration files are built from the projects name
-       >>> fp.write("[GLOBAL]" + os.linesep)   # and a shortcut for the development stage.
-       >>> fp.write("pattern_language=EN")     # They follow the ini syle (ms-world) for
+       >>> written = fp.write("[GLOBAL]" + os.linesep)   # and a shortcut for the development stage.
+       >>> written = fp.write("pattern_language=EN")     # They follow the ini syle (ms-world) for
        >>> fp.close()                           # configuration files.
        >>> os.environ["BASIC_CONFIGFILE_DIR"] = "/tmp" # you can set the directory, where config files live
        >>> do_not_care=Basic(project_name)
