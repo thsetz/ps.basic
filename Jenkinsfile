@@ -24,6 +24,10 @@ pipeline {
         }
         stage('Deploy') {
             steps { echo 'Deploying....' 
+                    //# set default values for git
+                    sh 'git config --global user.email "ci@setz.de"'
+                    sh 'git config --global user.name "ci"'
+                    sh 'git log -1 --oneline >> CHANGES.txt'
                     //# add the commit message to the CHANGES file
                     sh 'git log -1 --oneline >> CHANGES.txt'
                     sh 'git commit -m"autocommit from ci"  CHANGES.txt'
