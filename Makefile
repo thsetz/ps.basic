@@ -19,6 +19,9 @@ init:
 	source ./venv/bin/activate && invoke pre-install
 	    
 
+incr:
+	bash update_version_number.sh
+
 upgrade:
 	source ./venv/bin/activate && pip install --upgrade pip
 
