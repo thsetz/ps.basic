@@ -4,17 +4,18 @@ pipeline {
     stages {
         stage('Build') {
             steps { echo 'Building ...' 
-                    sh 'sudo apt install python-pydot python-pydot-ng graphviz'
+                    //sh 'sudo apt install python-pydot python-pydot-ng graphviz'
                     sh 'pip install --upgrade pip'
-                    //sh 'make init '
-                    sh 'make doc'
+                    sh 'make init '
                   }
         }
         stage('Unit Test') {
             steps { echo 'Unit Testing..' }
         }
         stage('docTest') {
-            steps { echo 'doc Testing..' }
+            steps { echo 'doc Testing..' 
+                    sh 'make doc'
+            }
         }
         stage('Deploy') {
             steps { echo 'Deploying....' 
