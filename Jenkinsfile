@@ -24,6 +24,7 @@ pipeline {
         }
         stage('Deploy') {
             steps { echo 'Deploying....' 
+                    sh 'ls dist/*'
                     //# set default values for git
                     sh 'git config --global user.email "ci@setz.de"'
                     sh 'git config --global user.name "ci"'
@@ -36,8 +37,10 @@ pipeline {
                     sh 'git commit -m"autocommit from ci"  VERSION.txt'
                     //# remove the old egg
                     sh '/bin/rm dist/* '
+                    sh 'ls dist/*'
                     //# create a new  egg (with the new version number)
                     sh 'make doc '
+                    sh 'ls dist/*'
                     //# upload to pypi
                     sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && twine upload -u thsetz -p Pypi123456789012 --verbose --repository-url https://test.pypi.org/legacy/ dist/* '
 
