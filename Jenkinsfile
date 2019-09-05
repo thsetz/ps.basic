@@ -24,15 +24,15 @@ pipeline {
         }
         stage('Deploy') {
             steps { echo 'Deploying....' 
-                    # add the commit message to the CHANGES file
+                    //# add the commit message to the CHANGES file
                     sh 'git log -1 --oneline >> CHANGES.txt'
-                    # increment the version number and write it to VERSION.txt
+                    //# increment the version number and write it to VERSION.txt
                     sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && python version_incr.py '
-                    # remove the old egg
+                    //# remove the old egg
                     sh '/bin/rm dist/* '
-                    # create a new  egg (with the new version number)
+                    //# create a new  egg (with the new version number)
                     sh 'make doc '
-                    # upload to pypi
+                    //# upload to pypi
                     sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && twine upload -u thsetz -p Pypi123456789012 --verbose --repository-url https://test.pypi.org/legacy/ dist/* '
 
                    
