@@ -24,6 +24,7 @@ pipeline {
         }
         stage('Deploy') {
             steps { echo 'Deploying....' 
+                    sh 'git status'
                     sh 'ls dist/*'
                     //# set default values for git
                     sh 'git config --global user.email "ci@setz.de"'
