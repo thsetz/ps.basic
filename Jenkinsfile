@@ -35,6 +35,7 @@ pipeline {
                     //# increment the version number and write it to VERSION.txt
                     sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && python version_incr.py '
                     sh 'git commit -m"autocommit from ci"  VERSION.txt'
+                    sh 'git push'
                     //# remove the old egg
                     sh '/bin/rm dist/* '
                     //# create a new  egg (with the new version number)
