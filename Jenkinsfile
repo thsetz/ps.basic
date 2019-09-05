@@ -24,20 +24,6 @@ pipeline {
         }
         stage('Deploy') {
             steps { echo 'Deploying....' 
-                    sh 'git checkout master'
-                    sh 'git status'
-                    sh 'ls dist/*'
-                    //# set default values for git
-                    sh 'git config --global user.email "ci@setz.de"'
-                    sh 'git config --global user.name "ci"'
-                    sh 'git log -1 --oneline >> CHANGES.txt'
-                    //# add the commit message to the CHANGES file
-                    sh 'git log -1 --oneline >> CHANGES.txt'
-                    sh 'git commit -m"autocommit from ci"  CHANGES.txt'
-                    //# increment the version number and write it to VERSION.txt
-                    sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && python version_incr.py '
-                    sh 'git commit -m"autocommit from ci"  VERSION.txt'
-                    sh 'git push'
                     //# remove the old egg
                     sh '/bin/rm dist/* '
                     //# create a new  egg (with the new version number)
