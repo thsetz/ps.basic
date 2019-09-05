@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Deploy') {
             steps { echo 'Deploying....' 
-                    //sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && devpi use http://setz.dnshome.de:4040/setzt/DEVELOPMENT && devpi login setzt --password setzt && devpi upload --with-docs'
+                    sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && 'twine upload --repository-url https://test.pypi.org/legacy/ dist/* '
                   }
         }
     }

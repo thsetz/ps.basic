@@ -20,6 +20,11 @@ These are:
     - some other small helper  functions
 
 
+Documentation:  https://psbasic.readthedocs.io
+
+Git:  https://bitbucket.org/drsetz/ps.basic/src/master/
+
+
 The usage of this package is closely related to the usage of the ps.herald package with adds a (via ssh tunnels distributed usable)
 monitoring environment based on the here implemented Basics.
 
