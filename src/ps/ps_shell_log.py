@@ -16,7 +16,7 @@ __doc__ = """ps_shell_log writes strings to the ps logging of the DEV_STAGE
 import sys
 import docopt
 import re, os
-import urllib2, base64
+import urllib, base64
 from   ps.Basic import Basic
 from package_version import version
 

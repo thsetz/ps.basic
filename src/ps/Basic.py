@@ -507,16 +507,18 @@ class EXEC(object):
        >>> x=Basic.get_instance("EXEC_Test")
        >>> from ps.Basic import EXEC,local_exec
        >>> DESTINATION_HOST="xx"
-       >>> r = EXEC(x, dictionary=dict(globals().items() + locals().items()))
+       >>> myg = globals().copy()
+       >>> myg.update(locals()) 
+       >>> r = EXEC(x, dictionary=myg)
        >>> r = EXEC(x, dictionary={"DESTINATION_HOST":DESTINATION_HOST})
-       >>> local_exec(r, LOCAL_SHELL_CMDS, "L_TOUCH_FILE", dict(globals().items() + locals().items()))
+       >>> local_exec(r, LOCAL_SHELL_CMDS, "L_TOUCH_FILE", myg)
        >>> r.exitcode
        0
        >>> r.stderr
        ['']
        >>> r.stdout
        ['']
-       >>> local_exec(r, LOCAL_SHELL_CMDS, "L_LS_FILE", dict(globals().items() + locals().items()))
+       >>> local_exec(r, LOCAL_SHELL_CMDS, "L_LS_FILE", myg )
        >>> r.exitcode
        0
        >>> r.stderr
