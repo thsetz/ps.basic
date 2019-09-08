@@ -11,6 +11,8 @@ Contents:
    :maxdepth: 2
 
    overview
+   ps
+   tests
    modules
    ToDo
 

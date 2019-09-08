@@ -5,29 +5,11 @@ import os
 here = os.path.abspath(os.path.dirname(__file__))
 
 
-def _read(name):
-    def appendnl(s):
-        if not s or s[-1] != '\n':
-            return s + '\n'
-        else:
-            return s
-
-    return appendnl(open(name).read())
-
-
-VERSION = _read('VERSION.txt').strip()
+VERSION = open('VERSION.txt').read().strip()
 version_suffix = ''
 open(os.path.join(here,'src', 'ps','package_version.py'), 'w').write('version = "%s"' % VERSION)
-try:
-   f = open('LOCAL-VERSION') 
-   version_suffix = f.readline().strip()
-except IOError:
-   pass
-
-import sys
 
 INSTALL_REQUIRES=[ 'setuptools', 'docopt' ,'pygraphviz'  ]
-#INSTALL_REQUIRES=[ 'setuptools', 'docopt'   ]
 
 setup(name='ps.basic',
       version=VERSION + version_suffix,
@@ -49,7 +31,6 @@ setup(name='ps.basic',
       author_email='thomas@setz.de',
       url='https://bitbucket.org/drsetz/ps.basic',
       license='',  # need/want 'ZPL'?
-      use_2to3=True,
       packages=find_packages('src'),
       package_dir={'': 'src'},
       namespace_packages=['ps', ],

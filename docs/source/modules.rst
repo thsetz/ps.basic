@@ -1,8 +1,8 @@
 Parts of the package
 ====================
 
-.. toctree::
-   :maxdepth: 4
+.. autosummary::
+   :toctree: _autosummary
 
    ps
    tests

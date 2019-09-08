@@ -28,9 +28,11 @@ try:
 except:
   from configparser import SafeConfigParser, ParsingError
 
+autosummary_generate = True 
 
-config_parser = SafeConfigParser()
-config_parser.read(os.path.join(os.path.abspath('.'),"../../setup.cfg"))
+
+#config_parser = SafeConfigParser()
+#config_parser.read(os.path.join(os.path.abspath('.'),"../../setup.cfg"))
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -39,6 +41,7 @@ sys.path.insert(0, os.path.join(os.path.abspath('.'), '../../..'))
 sys.path.insert(1, os.path.join(os.path.abspath('.'), '../..'))
 sys.path.insert(20, os.path.join(os.path.abspath('.'), '..'))
 
+for i in sys.path: print i
 
 
 
@@ -54,6 +57,7 @@ sys.path.insert(20, os.path.join(os.path.abspath('.'), '..'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
@@ -77,12 +81,12 @@ master_doc = 'index'
 
 ##################################################
 project = 'setz.basic'
-copyright = '2017, Dr. Thomas Michael Setz'
+copyright = '2019, Dr. Thomas Michael Setz'
 author = 'Dr. Thomas Michael Setz'
 # General information about the project.
-project   = u'ps.deploy-products2intern'
-project   = config_parser.get("GLOBAL", 'project_name')
-copyright = config_parser.get("GLOBAL", 'copyright')
+#project   = u'ps.deploy-products2intern'
+#project   = config_parser.get("GLOBAL", 'project_name')
+#copyright = config_parser.get("GLOBAL", 'copyright')
 
 
 # The version info for the project you're documenting, acts as replacement for

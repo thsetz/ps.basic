@@ -2,7 +2,6 @@ CHANGES.txt
 MANIFEST.in
 README.rst
 VERSION.txt
-setup.cfg
 setup.py
 src/ps/Basic.py
 src/ps/Patterns.py

@@ -1,8 +1,8 @@
 Metadata-Version: 1.1
 Name: ps.basic
-Version: 1.1.9
+Version: 1.1.17
 Summary: Basic class used in PS environment
-Home-page: https://setz.dnshome.de/setzt/DEVELOPMENT
+Home-page: https://bitbucket.org/drsetz/ps.basic
 Author: Setz
 Author-email: thomas@setz.de
 License: UNKNOWN
@@ -41,6 +41,10 @@ Description: Introduction
         
         
         sjha
+        a8aaf3c fix typo 2
+        2756e98 removed git commands
+        dc2266b add coverage
+        6d10561 add make target for version increment
         
 Keywords: PS
 Platform: UNKNOWN
