@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: ps.basic
-Version: 1.1.20
+Version: 1.1.21
 Summary: Basic class used in PS environment
 Home-page: https://bitbucket.org/drsetz/ps.basic
 Author: Setz
@@ -48,6 +48,7 @@ Description: Introduction
         f6ea245 autocommit from ci
         394c82c Merge branch 'master' of bitbucket.org-drsetz:drsetz/ps.basic
         0a9248d adapt to environment
+        9973c78 fix print statements
         
 Keywords: PS
 Platform: UNKNOWN
