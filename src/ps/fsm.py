@@ -6,7 +6,7 @@ from ps.Basic import Basic , get_html_string
 import pprint
 import inspect
 import sys
-from package_version import version
+from .package_version import version
 
 
 MACHINES = dict()
@@ -33,9 +33,9 @@ class FiniteStateMachine(object):
 
        >>> from ps.Basic import Basic
        >>> x = Basic("fsm")
-       >>> def error_fu(self,context):  print "error_fu called", self.name
-       >>> def fertig_fu(self,context): print "fertig_fu called", self.name
-       >>> def start_fu(self,context):  print "start_fu called", self.name
+       >>> def error_fu(self,context):  print ("error_fu called %s"%( self.name))
+       >>> def fertig_fu(self,context): print ("fertig_fu called %s"%(self.name))
+       >>> def start_fu(self,context):  print ("start_fu called %s"%( self.name))
        >>> from ps.fsm import FiniteStateMachine, get_graph, State
        >>> my_fsm = FiniteStateMachine('MY_FSM')
        >>> error  = State('ERROR',               compute_function=error_fu,   error=True, final=True   )
@@ -246,7 +246,8 @@ def get_graph(fsm, title=None):
         if state.mail_addr: 
             l=eval(state.mail_addr)
             for d in l:
-                name = d.keys()[0]
+                l2= d.keys()
+                name = list(l2)[0]
                 value= d[name]
                 fsm_graph.add_node(n="EMAIL_DST"+name+value, label="%s:%s"%(name,value), 
                                    shape="rpromoter", style="filled", 
