@@ -10,3 +10,4 @@ a8aaf3c fix typo 2
 dc2266b add coverage
 6d10561 add make target for version increment
 f6ea245 autocommit from ci
+394c82c Merge branch 'master' of bitbucket.org-drsetz:drsetz/ps.basic
