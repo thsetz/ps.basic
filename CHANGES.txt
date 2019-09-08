@@ -9,3 +9,4 @@ a8aaf3c fix typo 2
 2756e98 removed git commands
 dc2266b add coverage
 6d10561 add make target for version increment
+f6ea245 autocommit from ci
