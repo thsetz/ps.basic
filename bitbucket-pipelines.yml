@@ -12,8 +12,7 @@ pipelines:
           - pip
         script: # Modify the commands below to build your repository.
           - apt-get update && apt-get install -y graphviz
-          - pip install -r requirements.txt
-          - pip install -r requirements.txt
+          - pip install -r scripts/requirements.txt
           - python setup.py install
           - python -m pytest --cov=ps --cov-report=term tests/*.py
           - cd docs/source; make html

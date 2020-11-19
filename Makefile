@@ -1,8 +1,12 @@
 SHELL := /bin/bash
+SPHINXBUILD   := python3 -msphinx
 
-export DEVELOPMENT_DEVPI_USER=setzt
-export DEVELOPMENT_DEVPI_PASS=setzt
-export DEVELOPMENT_DEVPI_HTTPS=http://setz.dnshome.de:4040/setzt/DEVELOPMENT
+
+clean:
+	rm -fR LOG *pyc  *log *.db Test_rsync*cfg tests/coverage_data/* tests/junit_data/* docs/source/_build docs/source/LOG LOG parts eggs bin dist build .tox develop-eggs __pycache__
+	rm  -f Tests2*cfg
+	rm -f TEST_FSM.*
+
 
 init:
 	python3 -m venv venv
@@ -22,14 +26,13 @@ init:
 incr:
 	bash update_version_number.sh
 
-upgrade:
-	source ./venv/bin/activate && pip install --upgrade pip
-
 coverage:
 	source ./venv/bin/activate &&  python -m pytest --cov=ps --cov-report=term tests/*.py
-unit_test:
-	source ./venv/bin/activate && invoke unit-test
-	source ./venv/bin/activate && invoke doctest
+
+test:
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test --cov=src/ps  --junitxml=tests/junit_data/test_unit.xml tests/*.py
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test --junitxml=tests/junit_data/test_doc.xml --cov-append --cov=src/ps --doctest-glob="*,rst" --doctest-modules src/ps/*.py
+	source ./venv/bin/activate && coverage xml -i && mv coverage.xml tests/coverage_data/base_coverage.xml
 
 doc:
-	source ./venv/bin/activate && invoke doc 
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && python setup.py develop && cd docs/source; make html 

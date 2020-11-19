@@ -1,3 +1,4 @@
+# no shebang
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
@@ -28,7 +29,6 @@ try:
 except:
   from configparser import SafeConfigParser, ParsingError
 
-autosummary_generate = True 
 
 
 #config_parser = SafeConfigParser()
@@ -41,7 +41,7 @@ sys.path.insert(0, os.path.join(os.path.abspath('.'), '../../..'))
 sys.path.insert(1, os.path.join(os.path.abspath('.'), '../..'))
 sys.path.insert(20, os.path.join(os.path.abspath('.'), '..'))
 
-for i in sys.path: print i
+for i in sys.path: print (i)
 
 
 
@@ -64,6 +64,8 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages']
+
+autosummary_generate = True 
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

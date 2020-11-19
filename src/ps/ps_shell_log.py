@@ -1,6 +1,7 @@
 # psf: ta=4, -*-Python-*-, vi: set et ts=4: coding: utf-8
-__doc__ = """ps_shell_log writes strings to the ps logging of the DEV_STAGE 
+__doc__ = """ps_shell_log writes strings to the ps logging of the DEV_STAGE . It should be used from accompanying Programms e.g. shell-scripts to write logging Messages which will be integrated to the other logging messages on the correlated DEV_STAGE.
 
+  
   Usage: ps_shell_log [-v] [ --level=LEVEL ] [ --service_name=name ] TEXT ...
 
   Arguments:
@@ -18,7 +19,7 @@ import docopt
 import re, os
 import urllib, base64
 from   ps.Basic import Basic
-from package_version import version
+from .package_version import version
 
 def main():
     level="info"

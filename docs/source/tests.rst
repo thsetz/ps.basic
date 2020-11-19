@@ -1,31 +1,28 @@
-tests package
-=============
+Tests
+=====
 
-Submodules
-----------
 
-tests.test_basics module
-------------------------
+Basics module
+-------------
 
 .. automodule:: tests.test_base
    :members:
    :undoc-members:
    :show-inheritance:
 
-.. automodule:: tests.test_fsm
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
+State module
+-------------
 .. automodule:: tests.test_state
    :members:
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
+Finite State Machine
+--------------------
 
-.. .. automodule:: tests
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
+.. automodule:: tests.test_fsm
+   :members:
+   :undoc-members:
+   :show-inheritance:
+

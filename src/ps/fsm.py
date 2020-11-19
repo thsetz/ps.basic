@@ -1,4 +1,10 @@
 """
+This module implements a Framework for implementing FiniteState Machines within services.
+
+The Data/Control-Flow of the FiniteState Machine is documented with a picture drawn with graphviz to document the 
+behaviour of a Service.
+
+At Runtime, Statechanges are automatically logged to the logging Stream - enabling a precise analysis of the behaviour of services implemented using the framework. Especially Communications/Triggers crossing Systemboundaries could be analyzed accessing the logging Messages very easy.
 
 """
 
@@ -29,7 +35,7 @@ class FiniteStateMachine(object):
     """Generic Finite State Machine.
        The FinitStateMachine provides handler functions (the xxx_fu beyond),
        which will be called on entering a state. The context dictionary 
-       (see my_fsm.run...()) ben
+       (see my_fsm.run...()) beneath
 
        >>> from ps.Basic import Basic
        >>> x = Basic("fsm")

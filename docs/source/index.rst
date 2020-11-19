@@ -13,8 +13,6 @@ Contents:
    overview
    ps
    tests
-   modules
-   ToDo
 
    CHANGES
 
