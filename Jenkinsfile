@@ -20,7 +20,6 @@ pipeline {
         }
         stage('docTest') {
             steps { echo 'doc Testing..' 
-                   sh 'rm dist/*'
                    sh 'make doc'
             }
         }
