@@ -10,6 +10,7 @@ pipeline {
                     sh 'uname -a'
                     //sh 'make upgrade'
                     sh 'make init '
+                    sh 'make install '
                   }
         }
         stage('Unit Test') {

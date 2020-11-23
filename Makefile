@@ -24,8 +24,8 @@ init:
 	#source ./venv/bin/activate && invoke pre-install
 	    
 
-incr:
-	bash update_version_number.sh
+install:
+	 export DEV_STAGE=TESTING && source ./venv/bin/activate &&  python3 setup.py install
 
 coverage:
 	source ./venv/bin/activate &&  python -m pytest --cov=ps --cov-report=term tests/*.py
