@@ -16,7 +16,7 @@ init:
 	source ./venv/bin/activate && pip3 install -U twine
 	source ./venv/bin/activate && pip3 install -U pytest
 	source ./venv/bin/activate && pip3 install -U pytest-cov
-	source ./venv/bin/activate && pip3 install sphinx invoke coverage ipython numpydoc zest.releaser[recommended]
+	source ./venv/bin/activate && pip3 install sphinx coverage ipython numpydoc bump2version
 	source ./venv/bin/activate && pip3 install matplotlib pytest docopt 
 	source ./venv/bin/activate && pip3 install --install-option="--include-path=/usr/local/include/" --install-option="--library-path=/usr/local/lib/" pygraphviz
 	#source ./venv/bin/activate && pip3 install zest.releaser[recommended]
