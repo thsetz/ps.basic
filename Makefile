@@ -19,8 +19,8 @@ init:
 	source ./venv/bin/activate && pip3 install matplotlib pytest docopt 
 	source ./venv/bin/activate && pip3 install --install-option="--include-path=/usr/local/include/" --install-option="--library-path=/usr/local/lib/" pygraphviz
 	source ./venv/bin/activate && pip3 install zest.releaser[recommended]
-	source ./venv/bin/activate && invoke all-clean
-	source ./venv/bin/activate && invoke pre-install
+	#source ./venv/bin/activate && invoke all-clean
+	#source ./venv/bin/activate && invoke pre-install
 	    
 
 incr:
