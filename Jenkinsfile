@@ -8,13 +8,13 @@ pipeline {
             steps { echo 'Building ...' 
                     //sh 'sudo apt install python-pydot python-pydot-ng graphviz'
                     sh 'uname -a'
-                    sh 'make upgrade'
+                    //sh 'make upgrade'
                     sh 'make init '
                   }
         }
         stage('Unit Test') {
             steps { echo 'Unit Testing..'
-                    sh 'make unit_test'
+                    sh 'make test'
                     sh 'make coverage'
                   }
         }
