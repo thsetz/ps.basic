@@ -15,6 +15,7 @@ init:
 	source ./venv/bin/activate && pip3 install -U setuptools
 	source ./venv/bin/activate && pip3 install -U twine
 	source ./venv/bin/activate && pip3 install -U pytest
+	source ./venv/bin/activate && pip3 install -U pytest-cov
 	source ./venv/bin/activate && pip3 install sphinx invoke coverage ipython numpydoc zest.releaser[recommended]
 	source ./venv/bin/activate && pip3 install matplotlib pytest docopt 
 	source ./venv/bin/activate && pip3 install --install-option="--include-path=/usr/local/include/" --install-option="--library-path=/usr/local/lib/" pygraphviz
@@ -31,7 +32,7 @@ coverage:
 
 test:
 	#export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test -cov=src/ps  --junitxml=tests/junit_data/test_unit.xml tests/*.py
-	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test   --junitxml=tests/junit_data/test_unit.xml tests/*.py
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test  --cov=src/ps  --junitxml=tests/junit_data/test_unit.xml tests/*.py
 	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test --junitxml=tests/junit_data/test_doc.xml --cov-append --cov=src/ps --doctest-glob="*,rst" --doctest-modules src/ps/*.py
 	source ./venv/bin/activate && coverage xml -i && mv coverage.xml tests/coverage_data/base_coverage.xml
 
