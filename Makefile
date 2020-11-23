@@ -32,6 +32,7 @@ coverage:
 
 test:
 	#export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test -cov=src/ps  --junitxml=tests/junit_data/test_unit.xml tests/*.py
+	mkdir -p tests/coverage_data
 	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test  --cov=src/ps  --junitxml=tests/junit_data/test_unit.xml tests/*.py
 	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test --junitxml=tests/junit_data/test_doc.xml --cov-append --cov=src/ps --doctest-glob="*,rst" --doctest-modules src/ps/*.py
 	source ./venv/bin/activate && coverage xml -i && mv coverage.xml tests/coverage_data/base_coverage.xml
