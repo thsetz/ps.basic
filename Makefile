@@ -41,4 +41,5 @@ doc:
 	export DEV_STAGE=TESTING && source ./venv/bin/activate && python setup.py develop && cd docs/source; make html 
 
 release:
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && bumpversion minor
 	export DEV_STAGE=TESTING && source ./venv/bin/activate && python3 setup.py sdist
