@@ -27,13 +27,13 @@ pipeline {
         stage('Deploy') {
             steps { echo 'Deploying....' 
                     //# remove the old egg
-                    sh '/bin/rm dist/* '
+                    sh '/bin/rm -fR dist/* '
                     //# create a new  egg (with the new version number)
                     sh 'python setup.py sdist'
                     sh 'ls dist/*'
                     //# upload to pypi
                     //sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && twine upload -u thsetz -p Pypi123456789012 --verbose --repository-url https://test.pypi.org/legacy/ dist/* '
-                    sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && twine upload -u thsetz -p pypi123456789012 --verbose  dist/* '
+                    //sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && twine upload -u thsetz -p pypi123456789012 --verbose  dist/* '
 
                    
                   }
