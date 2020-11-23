@@ -28,7 +28,7 @@ pipeline {
                     //# remove the old egg
                     sh '/bin/rm -fR dist/* '
                     //# create a new  egg (with the new version number)
-                    sh 'python setup.py sdist'
+                    sh 'python3 setup.py sdist'
                     sh 'ls dist/*'
                     //# upload to pypi
                     //sh '#!/usr/bin/env bash \n' + 'source ./venv/bin/activate && twine upload -u thsetz -p Pypi123456789012 --verbose --repository-url https://test.pypi.org/legacy/ dist/* '
