@@ -12,7 +12,7 @@ Contents:
 
    overview
    ps
-   tests
+..   tests
 
    CHANGES
 

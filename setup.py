@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 import os
 
 
@@ -29,9 +29,9 @@ setup(name='ps.basic',
       author_email='thomas@setz.de',
       url='https://bitbucket.org/drsetz/ps.basic',
       license='GPL',
-      packages=find_packages('src'),
+      packages=find_namespace_packages(include=['ps.*']),
       package_dir={'': 'src'},
-      namespace_packages=['ps', ],
+      #namespace_packages=['ps', ],
       include_package_data=True,
       zip_safe=False,
       install_requires=INSTALL_REQUIRES ,

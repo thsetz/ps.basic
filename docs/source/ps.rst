@@ -10,35 +10,35 @@ The ps.basic package holds 4 Modules
    - ps_shell_log ( a cmd_line tool to create logging message
      useable from a shell)
 
-ps.Basic module
----------------
-
-.. automodule:: ps.Basic
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-ps.fsm  module
---------------
-
-.. automodule:: ps.fsm
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-ps.Patterns module
-------------------
-
-.. automodule:: ps.Patterns
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-ps.ps_shell_log module
+ps.basic.Config module
 ----------------------
 
-.. automodule:: ps.ps_shell_log
+.. automodule:: ps.basic.Config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ps.basic.fsm  module
+--------------------
+
+.. automodule:: ps.basic.fsm
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ps.basic.Patterns module
+------------------------
+
+.. automodule:: ps.basic.Patterns
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+ps.basic.ps_shell_log module
+----------------------------
+
+.. automodule:: ps.basic.ps_shell_log
    :members:
    :undoc-members:
    :show-inheritance:
