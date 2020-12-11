@@ -40,6 +40,11 @@ test:
 doc:
 	export DEV_STAGE=TESTING && source ./venv/bin/activate && python setup.py develop && cd docs/source; make html 
 
+release_dry:
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && bumpversion --dry-run --verbose patch
+	#export DEV_STAGE=TESTING && source ./venv/bin/activate && python3 setup.py sdist
 release:
-	export DEV_STAGE=TESTING && source ./venv/bin/activate && bumpversion patch
-	export DEV_STAGE=TESTING && source ./venv/bin/activate && python3 setup.py sdist
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && bumpversion --verbose patch
+	#export DEV_STAGE=TESTING && source ./venv/bin/activate && python3 setup.py sdist
+
+

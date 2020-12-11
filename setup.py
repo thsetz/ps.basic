@@ -5,14 +5,12 @@ import os
 here = os.path.abspath(os.path.dirname(__file__))
 
 
-VERSION = open('VERSION.txt').read().strip()
-version_suffix = ''
-open(os.path.join(here,'src', 'ps','package_version.py'), 'w').write('version = "%s"' % VERSION)
+version = '1.2.4'
 
 INSTALL_REQUIRES=[ 'setuptools', 'docopt' ,'pygraphviz'  ]
 
 setup(name='ps.basic',
-      version=VERSION + version_suffix,
+      version=version,
       description="Basic class used in PS environment",
       long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("CHANGES.txt")).read(),
