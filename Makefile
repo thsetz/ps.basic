@@ -9,10 +9,10 @@ clean:
 
 
 init:
+	/bin/rm -fR venv
 	python3 -m venv venv
-	source ./venv/bin/activate && pip3 install --upgrade pip
+	source ./venv/bin/activate && pip3 install --upgrade pip setuptools 
 	source ./venv/bin/activate && pip3 install -U sphinx_rtd_theme
-	source ./venv/bin/activate && pip3 install -U setuptools
 	source ./venv/bin/activate && pip3 install -U twine
 	source ./venv/bin/activate && pip3 install -U pytest
 	source ./venv/bin/activate && pip3 install -U pytest-cov
