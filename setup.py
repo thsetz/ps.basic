@@ -5,7 +5,7 @@ import os
 here = os.path.abspath(os.path.dirname(__file__))
 
 
-version = '1.2.4'
+version = '1.2.5'
 
 INSTALL_REQUIRES=[ 'setuptools', 'docopt' ,'pygraphviz'  ]
 
