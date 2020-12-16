@@ -1,8 +1,6 @@
-from setuptools import setup, find_namespace_packages
+from setuptools import setup 
 import os
 
-
-here = os.path.abspath(os.path.dirname(__file__))
 
 
 version = '1.2.6'
@@ -20,7 +18,7 @@ setup(name='ps.basic',
           #'Intended Audience :: DevOps',
           'License :: Other/Proprietary License',
           'Operating System :: POSIX :: Linux',
-          #'Programming Language :: Python :: 3.9 :: ',
+          'Programming Language :: Python :: 3.9 :: ',
           'Topic :: Software Development :: Build Tools',
           'Topic :: Utilities'
       ],
@@ -29,10 +27,9 @@ setup(name='ps.basic',
       author_email='thomas@setz.de',
       url='https://bitbucket.org/drsetz/ps.basic',
       license='GPL',
-      packages=find_namespace_packages(include=['ps.*']),
+      packages=['ps.basic'],
       package_dir={'': 'src'},
-      #namespace_packages=['ps', ],
-      include_package_data=True,
+      #include_package_data=True,
       zip_safe=False,
       install_requires=INSTALL_REQUIRES ,
       entry_points={

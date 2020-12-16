@@ -1,7 +1,14 @@
 from typing import Callable , Any
 
-class StateError:
-    pass
+
+class StateError(Exception):
+    def __init__(self,  message):
+        self.message = message
+
+
+
+
+
 class State(dict):
        
     """State class."""

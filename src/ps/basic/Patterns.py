@@ -8,11 +8,6 @@ __doc__ = """
    -  logging messages
 """
 
-
-def this_function_is_for_documentation_only():
-    pass
-
-
 import inspect
 
 PATTERN_LANGUAGES = ["DE", "EN"]

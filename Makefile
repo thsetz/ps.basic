@@ -16,6 +16,7 @@ init:
 	source ./venv/bin/activate && pip3 install -U twine
 	source ./venv/bin/activate && pip3 install -U pytest
 	source ./venv/bin/activate && pip3 install -U pytest-cov
+	source ./venv/bin/activate && pip3 install -U black
 	source ./venv/bin/activate && pip3 install sphinx coverage ipython numpydoc bump2version
 	source ./venv/bin/activate && pip3 install matplotlib pytest docopt 
 	source ./venv/bin/activate && pip3 install --install-option="--include-path=/usr/local/include/" --install-option="--library-path=/usr/local/lib/" pygraphviz
@@ -33,12 +34,18 @@ coverage:
 test:
 	#export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test -cov=src/ps  --junitxml=tests/junit_data/test_unit.xml tests/*.py
 	mkdir -p tests/coverage_data
-	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test  --cov=src/ps  --junitxml=tests/junit_data/test_unit.xml tests/*.py
-	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test --junitxml=tests/junit_data/test_doc.xml --cov-append --cov=src/ps --doctest-glob="*,rst" --doctest-modules src/ps/*.py
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test  tests/test_ps_basic_utils.py
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test  tests/test_ps_basic_Config.py
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test  tests/test_ps_basic_State.py
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test  tests/test_ps_basic_fsm.py
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test  tests/test_ps_basic_ps_shell_log.py
+	#export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test --junitxml=tests/junit_data/test_doc.xml --cov-append --cov=src/ps --doctest-glob="*,rst" --doctest-modules src/ps/basic/*.py
+	#export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test --junitxml=tests/junit_data/test_doc.xml --cov-append --cov=src/ps --doctest-glob="*,rst" --doctest-modules docs/source/*.rst
 	source ./venv/bin/activate && coverage xml -i && mv coverage.xml tests/coverage_data/base_coverage.xml
 
 doc:
-	export DEV_STAGE=TESTING && source ./venv/bin/activate && python setup.py develop && cd docs/source; make html 
+	export IS_TESTING="YES" && export DEV_STAGE=TESTING && source ./venv/bin/activate && cd docs && py.test --junitxml=../tests/junit_data/test_doc.xml --cov-append --cov=../src/ps --doctest-glob="*,rst" --doctest-modules source/*.rst
+	export IS_TESTING="YES" && export DEV_STAGE=TESTING && source ./venv/bin/activate && python setup.py develop && cd docs/source; make html 
 
 release_dry:
 	export DEV_STAGE=TESTING && source ./venv/bin/activate && bumpversion --dry-run --verbose patch

@@ -1,13 +1,14 @@
 from ps.basic.State import State
+from ps.basic import __version__ as version 
+from ps.basic import get_html_string
+from ps.basic.Config import logger
 
-import logging
+#import logging
+#logger = logging.getLogger(__name__)
 
-logger = logging.getLogger(__name__)
-version = "xxxx"
-def get_html_string(s):
-    return s
-
-class TransitionError: pass
+class TransitionError(Exception):
+   def __init__(self,  message):
+        self.message = message
 
 
 
@@ -50,17 +51,18 @@ class FiniteStateMachine(object):
     def transition(self, input_value):
         """Transition to the next state."""
         current = self.current_state
-        if current is None:
-            raise TransitionError('Current state not set.')
+        #if current is None:
+        #    raise TransitionError('Current state not set.')
 
         #destination_state = current.get(input_value, current.default_transition)
         print(input_value)
         destination_state = current[input_value]
-        if destination_state is None: 
-            raise TransitionError('Cannot transition from state %r'
-                                  ' on input %r.' % (current.name, input_value))
-        else:
-            self.current_state = destination_state
+        #if destination_state is None: 
+        #    raise TransitionError('Cannot transition from state %r'
+        #                          ' on input %r.' % (current.name, input_value))
+        #else:
+        #    self.current_state = destination_state
+        self.current_state = destination_state
 
     def reset(self):
         """Enter the Finite State Machine."""
@@ -83,11 +85,16 @@ class FiniteStateMachine(object):
             my_current_state = self.current_state
             return_value_of_compute_function = my_current_state.compute_function(my_current_state,context)
             logger.debug(my_current_state.name + "-compute_function returned  " + str(return_value_of_compute_function), extra={"package_version":version}) 
-            if isinstance(return_value_of_compute_function,State):
-                logger.debug("%s.run new step: %s's default_handler left context as %s"\
-                                  %( self.name, my_current_state.name, get_html_string(context)), extra={"package_version":version})
-            else:
-                logger.debug("%s.run new step: %s's compute function left context as %s"\
+            print("HUHUHUHU") 
+            print(type(return_value_of_compute_function)) 
+            print("HUHUHUHU") 
+            #if isinstance(return_value_of_compute_function,State):
+            #    logger.debug("%s.run new step: %s's default_handler left context as %s"\
+            #                      %( self.name, my_current_state.name, get_html_string(context)), extra={"package_version":version})
+            #else:
+            #    logger.debug("%s.run new step: %s's compute function left context as %s"\
+            #                      %( self.name, my_current_state.name, get_html_string(context)), extra={"package_version":version})
+            logger.debug("%s.run new step: %s's compute function left context as %s"\
                                   %( self.name, my_current_state.name, get_html_string(context)), extra={"package_version":version})
             self.inputs.append(return_value_of_compute_function)
             if my_current_state.final == True:
