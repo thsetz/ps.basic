@@ -1,1 +1,16 @@
 venv
+.coverage
+LOG/*
+build/
+dist/*
+docs/LOG/*
+docs/htmlcov/*
+docs/service_name_lock_d
+docs/source/_build/*
+htmlcov/*
+src/ps.basic.egg-info/*
+src/ps/basic/__pycache__/*
+tests/__pycache__/
+tests/coverage_data/
+tests/junit_data/
+tests/old/

@@ -1,0 +1,89 @@
+import os, sys, pytest, time, logging, pprint, signal
+from socket import gethostname
+from configparser import ParsingError
+from importlib import reload
+
+from t_utils import (
+    TEST_SERVICE_NAME,
+    reset_Singleton,
+    get_data_of_file,
+    common_Config_class_attributes_after_initialisation,
+)
+
+
+import ps.basic
+from ps.basic import DEV_STAGES, Config, Patterns
+
+os.environ["IS_TESTING"] = "YES"
+
+
+
+
+#
+# LOCK FILE THINGS
+#
+def test_properties_are_set_using_guarded_by_lockfile_the_lock_file_does_NOT_already_exist(
+    dev_allowed_stages,
+):
+    #if dev_allowed_stages == "DEVELOPMENT":
+    #     print( f" Skip {dev_allowed_stages}")
+    #     return 
+    # Make sure the lock file is deleted
+    lock_filename = os.path.join(
+        os.getcwd(),
+        "%s_lock%s" % (TEST_SERVICE_NAME, DEV_STAGES[dev_allowed_stages]["suffix"]),
+    )   
+    print(f"Lockfilename is {lock_filename}")
+    if os.path.isfile(lock_filename):
+        os.remove(lock_filename)
+    reset_Singleton()
+
+    Config.Basic(TEST_SERVICE_NAME, guarded_by_lockfile=True)
+    common_Config_class_attributes_after_initialisation(dev_allowed_stages)
+    assert "started new lock guarded instance on" in get_data_of_file(
+        Config.log_file_name
+    )   
+    assert Config.i_have_lock
+    assert os.path.isfile(Config.lock_file_name)
+    assert str(os.getpid()) in get_data_of_file(Config.lock_file_name)
+    # Reset the singleton (but leave the lockfile in the filesystem)
+    # The instantiation should raise a Config.LockedInitialisationOfSingleton Exception
+    # because the pid is still the same
+    assert(os.path.isfile(lock_filename))
+    reset_Singleton()
+    assert(os.path.isfile(lock_filename))
+    # time.sleep(1)
+    with pytest.raises(Config.LockedInitialisationOfSingleton):
+        print("JUPPHEIDI")
+        Config.Basic(TEST_SERVICE_NAME, guarded_by_lockfile=True)
+        print(get_data_of_file(Config.log_file_name))
+        print("JUPPHEIDI2")
+    assert os.getpid() == int(get_data_of_file(Config.lock_file_name))
+
+    # Write a wrong pid into the lock file ==> now the instantiation will detect, that the service
+    # is NOT running:
+    #    - remove the lock file
+    #    - and  raise a Config.LockedInitialisationOfSingleton exception
+    assert os.path.isfile(Config.lock_file_name)
+    with open(Config.lock_file_name, "w") as fp: 
+        fp.write("999999")
+        fp.flush()
+    reset_Singleton(remove_log_file=False)
+    with pytest.raises(Config.LockedInitialisationOfSingleton):
+        Config.Basic(TEST_SERVICE_NAME, guarded_by_lockfile=True)
+    assert "Will Remove the lock file" in get_data_of_file(Config.log_file_name)
+    print("The lockFileName is X%sX"%(Config.lock_file_name)) 
+    assert not os.path.isfile(Config.lock_file_name)
+    assert Config.i_have_lock == False
+
+    # Now the singleton could be used as at the beginning of the test
+    reset_Singleton(remove_log_file=False)
+    Config.Basic(TEST_SERVICE_NAME, guarded_by_lockfile=True)
+    common_Config_class_attributes_after_initialisation(dev_allowed_stages)
+    print("The 2lockFileName is X%sX"%(Config.lock_file_name)) 
+    assert os.path.isfile(Config.lock_file_name)
+    assert str(os.getpid()) in get_data_of_file(Config.lock_file_name)
+
+
+
+

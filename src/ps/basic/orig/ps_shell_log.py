@@ -18,20 +18,27 @@ import sys
 import docopt
 import re, os
 import urllib, base64
-from   ps.Basic import Basic
+from ps.Basic import Basic
 from .package_version import version
 
+
 def main():
-    level="info"
-    service_name="shell_log"
+    level = "info"
+    service_name = "shell_log"
     options = docopt.docopt(__doc__, version=1)
     sys.stdout.write(options)
-    if options["-v"]:                     VERBOSE = True
-    if options["--level"] != None:        level=options["--level"]
-    if options["--service_name"] != None: service_name=options["--service_name"]
+    if options["-v"]:
+        VERBOSE = True
+    if options["--level"] != None:
+        level = options["--level"]
+    if options["--service_name"] != None:
+        service_name = options["--service_name"]
 
     the_singleton = Basic.get_instance(service_name, have_config_file=False)
     try:
-       exec('Basic.logger.%s("%s",extra={"package_version":"%s")'%(level.lower(),options['TEXT'],str(version)))
+        exec(
+            'Basic.logger.%s("%s",extra={"package_version":"%s")'
+            % (level.lower(), options["TEXT"], str(version))
+        )
     except:
-       Basic.logger.exception("Exception while calling ps_shell_log")
+        Basic.logger.exception("Exception while calling ps_shell_log")

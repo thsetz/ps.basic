@@ -1,43 +1,44 @@
 from ps.basic.State import State
-from ps.basic import __version__ as version 
+from ps.basic import __version__ as version
 from ps.basic import get_html_string
 from ps.basic.Config import logger
 
-#import logging
-#logger = logging.getLogger(__name__)
+# import logging
+# logger = logging.getLogger(__name__)
+
 
 class TransitionError(Exception):
-   def __init__(self,  message):
+    def __init__(self, message):
         self.message = message
-
 
 
 class FiniteStateMachine(object):
     """Generic Finite State Machine."""
 
-    def __init__(self, name ):
+    def __init__(self, name: str):
         """Construct a FSM."""
         self.name = name
-        self.current_state, self.init_state  = None,None
-        self.inputs , self.states , self.final_states,  self.error_states = [] , [], [], []
-        #MACHINES[name] = self
-        #MACHINES['default'] = MACHINES[name]
+        self.current_state, self.init_state = None, None
+        self.inputs, self.states, = [], []
+        self.final_states, self.error_states = [], []
 
     def add_state(self, states: [State]) -> None:
         for state in states:
-            if state.error: self.error_states.append(state)
-            if state.final: self.final_states.append(state)
+            if state.error:
+                self.error_states.append(state)
+            if state.final:
+                self.final_states.append(state)
             if state.initial:
-                if self.init_state == None:
+                if self.init_state is None:
                     self.init_state = state
                 else:
-                    raise TransitionError('Only One initial State allowed.')
+                    raise TransitionError("Only One initial State allowed.")
             self.states.append(state)
 
     @property
     def all_transitions(self):
         """Get transitions from states.
-        
+
         Returns:
             List of three element tuples each consisting of
             (source state, input, destination state)
@@ -47,62 +48,88 @@ class FiniteStateMachine(object):
             for input_value, dst_state in src_state.items():
                 transitions.append((src_state, input_value, dst_state))
         return transitions
-    
-    def transition(self, input_value):
+
+    def transition(self, input_value: str):
         """Transition to the next state."""
         current = self.current_state
-        #if current is None:
+        # if current is None:
         #    raise TransitionError('Current state not set.')
 
-        #destination_state = current.get(input_value, current.default_transition)
-        print(input_value)
+        # destination_state = \
+        #              current.get(input_value, current.default_transition)
         destination_state = current[input_value]
-        #if destination_state is None: 
+        # if destination_state is None:
         #    raise TransitionError('Cannot transition from state %r'
-        #                          ' on input %r.' % (current.name, input_value))
-        #else:
+        #                          ' on input %r.'
+        #                          % (current.name, input_value))
+        # else:
         #    self.current_state = destination_state
         self.current_state = destination_state
 
     def reset(self):
         """Enter the Finite State Machine."""
         self.current_state = self.init_state
-        del(self.inputs)
-        self.inputs = list() 
+        del self.inputs
+        self.inputs = list()
 
-    def process(self, input_data):
+    def process(self, input_data: str):
         """Process input data."""
         self.reset()
         for item in input_data:
             self.transition(item)
 
-    def run(self,context ):
+    def run(self, context: dict):
         """Process input data."""
         self.reset()
         current_state = self.init_state
-        logger.debug("FSM: " + self.name + " started in State " + str(current_state), extra={"package_version":version})
+        logger.debug(
+            "FSM: " + self.name + " started in State " + str(current_state),
+            extra={"package_version": version},
+        )
         while True:
             my_current_state = self.current_state
-            return_value_of_compute_function = my_current_state.compute_function(my_current_state,context)
-            logger.debug(my_current_state.name + "-compute_function returned  " + str(return_value_of_compute_function), extra={"package_version":version}) 
-            print("HUHUHUHU") 
-            print(type(return_value_of_compute_function)) 
-            print("HUHUHUHU") 
-            #if isinstance(return_value_of_compute_function,State):
-            #    logger.debug("%s.run new step: %s's default_handler left context as %s"\
-            #                      %( self.name, my_current_state.name, get_html_string(context)), extra={"package_version":version})
-            #else:
-            #    logger.debug("%s.run new step: %s's compute function left context as %s"\
-            #                      %( self.name, my_current_state.name, get_html_string(context)), extra={"package_version":version})
-            logger.debug("%s.run new step: %s's compute function left context as %s"\
-                                  %( self.name, my_current_state.name, get_html_string(context)), extra={"package_version":version})
-            self.inputs.append(return_value_of_compute_function)
-            if my_current_state.final == True:
-               logger.debug("Leave run, as " + self.current_state.name + " is a final state ", extra={"package_version":version})
-               break
+            rval = my_current_state.compute_function(
+                                              my_current_state, context)
+            logger.debug(
+                my_current_state.name
+                + "-compute_function returned  "
+                + str(rval),
+                extra={"package_version": version},
+            )
+            print(type(rval))
+            # if isinstance(rval,State):
+            #    logger.debug("%s.run new step: %s's \
+            #                   default_handler left context as %s"\
+            #                   %( self.name, my_current_state.name, \
+            #                   get_html_string(context)), \
+            #                   extra={"package_version":version})
+            # else:
+            #    logger.debug("%s.run new step: %s's compute function\
+            #                    left context as %s"\
+            #                    %( self.name, my_current_state.name, \
+            #                    get_html_string(context)), \
+            #                    extra={"package_version":version})
+            logger.debug(
+                "%s.run new step: %s's compute function left context as %s"
+                % (self.name, my_current_state.name, get_html_string(context)),
+                extra={"package_version": version},
+            )
+            self.inputs.append(rval)
+            if my_current_state.final is True:
+                logger.debug(
+                    "Leave run, as " + self.current_state.name +
+                    " is a final state ",
+                    extra={"package_version": version},
+                )
+                break
             else:
-                self.transition(return_value_of_compute_function)
-                logger.debug("TRANSITION: from State " + my_current_state.name + "<br> ONInput:   '" \
-                                   + str(return_value_of_compute_function) + "'<br>To State: " + self.current_state.name \
-                                         , extra={"package_version":version})
-
+                self.transition(rval)
+                logger.debug(
+                    "TRANSITION: from State "
+                    + my_current_state.name
+                    + "<br> ONInput:   '"
+                    + str(rval)
+                    + "'<br>To State: "
+                    + self.current_state.name,
+                    extra={"package_version": version},
+                )

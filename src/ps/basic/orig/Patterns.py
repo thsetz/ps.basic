@@ -54,7 +54,6 @@ TEXT_PATTERNS = {
         "QUARANTINED_TRANSFER": "Fehler beim Viruscheck <br> %(cmd)s",
         "FAIL_PRODMON_NOTIFICATION": "Fehler beim prodmon Aufruf %(dst)s   fuer %(theurl)s %(html)s",
         "SUCC_PRODMON_NOTIFICATION": "Erfolgreicher prodmon Aufruf %(dst)s fuer %(theurl)s %(html)s",
-
     },
     "EN": {
         "PROD_LOCKED": "%(snapshot_name)s LOCKED ",
@@ -68,7 +67,6 @@ TEXT_PATTERNS = {
         "QUARANTINED_TRANSFER": "Suspicous transmission qurantined  %(cmd)s ",
         "FAIL_PRODMON_NOTIFICATION": "FAILURE %(dst)s for %(theurl)s %(html)s",
         "SUCC_PRODMON_NOTIFICATION": "SUCCESS %(dst)s for %(theurl)s %(html)s",
-
     },
 }
 
@@ -80,7 +78,7 @@ LOGGING_PATTERNS = {
         "NO_EMAIL_TO": "%(snapshot_name)s hat keine  EMAIL_TO: in %(sourcedir_p)s/%(snapshot_name)s/mail",
         "SUCC_TRANSFER": "%(MESSAGE)s",
         "FAIL_TRANSFER": "[SYSTEM-DATA] FAILURE %(user_identification)s:%(PID)s transfer ",
-        "EMAIL_FOOTER": 'Bei Fragen bitte an _EP-Produktionsstrecke wenden.',
+        "EMAIL_FOOTER": "Bei Fragen bitte an _EP-Produktionsstrecke wenden.",
         "PREPARE_CALLED": "prepare aufgerufen, fand:    %(l_product_snapshots)s )",
         "CREATED_CLOUD_LOCKFILE": "%(cloud_lockfile_name)s CREATED",
         "ERROR_RM_CLOUD_LOCKFILE": "FEHLER %(cloud_lockfile_name)s kann nicht geloescht werden.",
@@ -124,7 +122,6 @@ LOGGING_PATTERNS = {
         "RSYNC_FAILED": "Der rsync Aufruf/transfer hatte einen Fehler. Abort now.",
         "RSYNC_SUCC": "SUCCESS ",
         "LANGUAGE_PATTERN_FAILED": "Fehler beim setzen der LANGUAGE_PATTERN. Verwende default %(PATTERN_LANGUAGE)s.",
-
     },
     "EN": {
         "CREATE_INPROGRESS_DIR": "LOCK Directory %(name)s created",
@@ -177,7 +174,6 @@ LOGGING_PATTERNS = {
         "RSYNC_FAILED": "The rsync transfer exited with an error. Abort now.",
         "RSYNC_SUCC": "SUCCESS",
         "LANGUAGE_PATTERN_FAILED": "Error setting PATTERN_LANGUAGE. Use default %(PATTERN_LANGUAGE)s.",
-
     },
 }
 
@@ -214,13 +210,13 @@ REMOTE_SHELL_CMDS = {
     "R_FIND_OK_FILE_OF_CURRENT_TRANSMISSION": "find %(destination_dir)s/%(expected_name_of_ok_file)s -maxdepth 0 -type f",
     "R_CP_OLD_TO_STATIC_LINKED_NEW": "cp -al %(dirname_found)s %(destination_dir)s/%(product_id_stamp_p)s",
     "R_TOUCH_TRANSMISSION_OK_FILE": "touch %(destination_dir)s/%(product_id_stamp_p)s.ok",
-    "R_GET_AMOUNT_PRODUCT_DIRS": 'find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* -maxdepth 0 -type d | wc -l',
-    "R_NAME_OF_OLDEST_PRODUCT_DIR": 'find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* -maxdepth 0 -type d | head -1',
+    "R_GET_AMOUNT_PRODUCT_DIRS": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* -maxdepth 0 -type d | wc -l",
+    "R_NAME_OF_OLDEST_PRODUCT_DIR": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* -maxdepth 0 -type d | head -1",
     "R_REMOVE_OLDEST_PRODUCT_DIR": "rm -rf %(name_of_oldest_product_dir)s*",
-    "R_GET_AMOUNT_PRODUCT_OK_FILES": 'find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s*ok -maxdepth 0 -type f | wc -l',
-    "R_GET_OLDEST_PRODUCT_DIR": 'find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* -maxdepth 0 -type d | head -1',
+    "R_GET_AMOUNT_PRODUCT_OK_FILES": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s*ok -maxdepth 0 -type f | wc -l",
+    "R_GET_OLDEST_PRODUCT_DIR": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* -maxdepth 0 -type d | head -1",
     "R_RM_OLDEST_PRODUCT_DIR": "rm -rf %(oldest_data)s*",
-    "R_LIST_PRODUCT_OK_FILES": 'find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s*ok -maxdepth 0 -type f',
-    "R_LIST_PRODUCT_DIRS": 'find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* -maxdepth 0 -type d ',
+    "R_LIST_PRODUCT_OK_FILES": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s*ok -maxdepth 0 -type f",
+    "R_LIST_PRODUCT_DIRS": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* -maxdepth 0 -type d ",
     "R_FIND_CLEANME_DIRS": "find %(dstdir_on_eu_host)s -name PI*CLEANME  -print  ",
 }
