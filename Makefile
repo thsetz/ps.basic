@@ -13,7 +13,7 @@ init:
 	python3 -m venv venv
 	source ./venv/bin/activate && pip3 install --upgrade pip setuptools 
 	source ./venv/bin/activate && pip3 install -U sphinx_rtd_theme
-	source ./venv/bin/activate && pip3 install -U twine
+	source ./venv/bin/activate && pip3 install -U twine, tox
 	source ./venv/bin/activate && pip3 install -U pytest
 	source ./venv/bin/activate && pip3 install -U pytest-cov
 	source ./venv/bin/activate && pip3 install -U black
@@ -32,7 +32,7 @@ coverage:
 	source ./venv/bin/activate &&  python -m pytest --cov=ps --cov-report=term tests/*.py
 
 test:
-	#export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test -cov=src/ps  --junitxml=tests/junit_data/test_unit.xml tests/*.py
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test -cov=src/ps  --junitxml=tests/junit_data/test_unit.xml tests/*.py
 	mkdir -p tests/coverage_data
 	export DEV_STAGE=TESTING && source ./venv/bin/activate &&  py.test  tests/test_ps_basic_utils.py
 	export DEV_STAGE=TESTING && source ./venv/bin/activate &&  py.test  tests/test_ps_basic_Lock.py
@@ -40,9 +40,9 @@ test:
 	export DEV_STAGE=TESTING && source ./venv/bin/activate &&  py.test  tests/test_ps_basic_State.py
 	export DEV_STAGE=TESTING && source ./venv/bin/activate &&  py.test  tests/test_ps_basic_fsm.py
 	export DEV_STAGE=TESTING && source ./venv/bin/activate &&  py.test  tests/test_ps_basic_ps_shell_log.py
-	#export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test --junitxml=tests/junit_data/test_doc.xml --cov-append --cov=src/ps --doctest-glob="*,rst" --doctest-modules src/ps/basic/*.py
-	#export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test --junitxml=tests/junit_data/test_doc.xml --cov-append --cov=src/ps --doctest-glob="*,rst" --doctest-modules docs/source/*.rst
-	#source ./venv/bin/activate && coverage xml -i && mv coverage.xml tests/coverage_data/base_coverage.xml
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test --junitxml=tests/junit_data/test_doc.xml --cov-append --cov=src/ps --doctest-glob="*,rst" --doctest-modules src/ps/basic/*.py
+	export DEV_STAGE=TESTING && source ./venv/bin/activate && py.test --junitxml=tests/junit_data/test_doc.xml --cov-append --cov=src/ps --doctest-glob="*,rst" --doctest-modules docs/source/*.rst
+	source ./venv/bin/activate && coverage xml -i && mv coverage.xml tests/coverage_data/base_coverage.xml
 
 doc:
 	export IS_TESTING="YES" && export DEV_STAGE=TESTING && source ./venv/bin/activate && cd docs && py.test --junitxml=../tests/junit_data/test_doc.xml --cov-append --cov=../src/ps --doctest-glob="*,rst" --doctest-modules source/*.rst

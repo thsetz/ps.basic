@@ -1,21 +1,21 @@
-import os, sys, pytest, time, logging, pprint, signal
-from socket import gethostname
+import os
+import signal
+import sys
 from configparser import ParsingError
-from importlib import reload
+
+from ps.basic import Config, DEV_STAGES, Patterns
+
+import pytest
 
 from t_utils import (
     TEST_SERVICE_NAME,
-    reset_Singleton,
-    get_data_of_file,
     common_Config_class_attributes_after_initialisation,
+    get_data_of_file,
+    reset_singleton,
 )
 
 
-import ps.basic
-from ps.basic import DEV_STAGES, Config, Patterns
-
 os.environ["IS_TESTING"] = "YES"
-
 
 # The fixtures:
 #   - dev_allowed_stages
@@ -23,21 +23,24 @@ os.environ["IS_TESTING"] = "YES"
 # are defined in conftest.py
 
 
-def test_that_an_reinitialization_of_the_singleton_raises_an_Error(dev_allowed_stages):
+def test_that_an_reinitialization_of_the_singleton_raises_an_error(
+    dev_allowed_stages,
+):
     with pytest.raises(Config.ForbiddenInitialisationOfSingleton):
         b = Config.Basic(TEST_SERVICE_NAME)  # Should be  OK
-        k = Config.Basic(TEST_SERVICE_NAME)  # Will Raise Error
+        assert b
+        Config.Basic(TEST_SERVICE_NAME)  # Will Raise Error
 
 
 def test_service_names_with_wrong_stage_name_raise_error(dev_wrong_stages):
-    reset_Singleton()
+    reset_singleton()
     with pytest.raises(Config.ForbiddenInitialisationOfSingleton):
         assert Config.service_name == "not_yet_defined"
         Config.Basic(TEST_SERVICE_NAME)
 
 
 def test_properties_are_set(dev_allowed_stages):
-    reset_Singleton()
+    reset_singleton()
     Config.Basic(TEST_SERVICE_NAME)
     common_Config_class_attributes_after_initialisation(dev_allowed_stages)
     assert Config.primary_herald_url == ""
@@ -46,19 +49,21 @@ def test_properties_are_set(dev_allowed_stages):
 #
 # verbose mode
 #
-def test_verbose_mode_with_uninitialized_singleton_raises_error(dev_allowed_stages):
-    reset_Singleton()
-    with pytest.raises(Config.ForbiddenInitialisationOfSingleton):
+def test_verbose_mode_with_uninitialized_singleton_raises_error(
+    dev_allowed_stages,
+):
+    reset_singleton()
+    with pytest.raises(TypeError):
         assert Config.service_name == "not_yet_defined"
         Config.Basic.verbose()
 
 
-def test_verbose_mode_with_initialized_singleton_writes_logging_messages_to_stdout_too(
+def test_verbose_mode_with_writes_logging_messages_to_stdout_too(
     dev_allowed_stages, capsys
 ):
-    reset_Singleton()
-    Config.Basic(TEST_SERVICE_NAME)
-    Config.Basic.verbose()
+    reset_singleton()
+    singleton = Config.Basic(TEST_SERVICE_NAME)
+    singleton.verbose()
     msg = "This is a message"
     Config.logger.info(msg, extra={"package_version": "__version__"})
     captured = capsys.readouterr()
@@ -67,26 +72,26 @@ def test_verbose_mode_with_initialized_singleton_writes_logging_messages_to_stdo
     assert msg in get_data_of_file(Config.log_file_name)
 
 
-
 #
 # CONFIG FILE THINGS
 #
-def test_not_existing_config_file_directory_raises_ForbiddenInitialisationOfSingleton(
+def test_not_existing_config_file_directory_raises_error(
     dev_allowed_stages, capsys
 ):
-    reset_Singleton()
+    reset_singleton()
     config_file_directory = "/foobar"
     os.environ["BASIC_CONFIGFILE_DIR"] = config_file_directory
     with pytest.raises(Config.ForbiddenInitialisationOfSingleton):
         Config.Basic(TEST_SERVICE_NAME, have_config_file=True)
     common_Config_class_attributes_after_initialisation(dev_allowed_stages)
     assert Config.config_file_name == "not_yet_defined"
-    assert "BASIC_CONFIGFILE_DIR /foobar not found." in \
-             get_data_of_file(Config.log_file_name)
+    assert "BASIC_CONFIGFILE_DIR /foobar not found." in get_data_of_file(
+        Config.log_file_name
+    )
 
 
 def test_config_file_in_local_directory(dev_allowed_stages, capsys):
-    reset_Singleton()
+    reset_singleton()
     os.environ["BASIC_CONFIGFILE_DIR"] = ""
     del os.environ["BASIC_CONFIGFILE_DIR"]
 
@@ -101,13 +106,30 @@ def test_config_file_in_local_directory(dev_allowed_stages, capsys):
     common_Config_class_attributes_after_initialisation(dev_allowed_stages)
     assert Config.primary_herald_url == ""
 
-    assert Config.config_file_name == os.path.join(os.getcwd(), config_file_name)
+    assert Config.config_file_name == os.path.join(
+        os.getcwd(), config_file_name
+    )
     assert "test_section" in Config.config_parser.sections()
     assert "test_value" == Config.config_parser["test_section"]["test_name"]
 
 
+def test_config_file_in_local_directory_not_given(dev_allowed_stages, capsys):
+    reset_singleton()
+    os.environ["BASIC_CONFIGFILE_DIR"] = ""
+    del os.environ["BASIC_CONFIGFILE_DIR"]
+
+    config_file_name = os.path.join(
+        TEST_SERVICE_NAME + DEV_STAGES[dev_allowed_stages]["suffix"] + ".cfg"
+    )
+    if os.path.isfile(config_file_name):
+        os.remove(config_file_name)
+
+    with pytest.raises(Config.ForbiddenInitialisationOfSingleton):
+        Config.Basic(TEST_SERVICE_NAME, have_config_file=True)
+
+
 def test_config_file_in_directory(dev_allowed_stages, capsys):
-    reset_Singleton()
+    reset_singleton()
     config_file_directory = "/tmp"
     config_file_name = os.path.join(
         config_file_directory,
@@ -130,7 +152,7 @@ def test_config_file_in_directory(dev_allowed_stages, capsys):
 def test_wrong_formated_config_files_in_directory_raise_error(
     dev_allowed_stages, capsys
 ):
-    reset_Singleton()
+    reset_singleton()
     config_file_directory = "/tmp"
     config_file_name = os.path.join(
         config_file_directory,
@@ -147,13 +169,35 @@ def test_wrong_formated_config_files_in_directory_raise_error(
     assert Config.primary_herald_url == ""
 
     assert Config.config_file_name == config_file_name
-    assert "MissingSectionHeaderError" in get_data_of_file(Config.log_file_name)
+    assert "MissingSectionHeaderError" in get_data_of_file(
+        Config.log_file_name
+    )
+
+
+def test_forced_config_file_raises_error_on_impossible_pattern_language(
+    dev_allowed_stages, capsys
+):
+    reset_singleton()
+    config_file_directory = "/tmp"
+    config_file_name = os.path.join(
+        config_file_directory,
+        TEST_SERVICE_NAME + DEV_STAGES[dev_allowed_stages]["suffix"] + ".cfg",
+    )
+    os.environ["BASIC_CONFIGFILE_DIR"] = config_file_directory
+    with open(config_file_name, "w") as fp:
+        fp.write("[GLOBAL]\n")
+        fp.write("    pattern_language = IMPOSSIBLE\n")
+
+    with pytest.raises(Config.ForbiddenInitialisationOfSingleton):
+        Config.Basic(TEST_SERVICE_NAME, have_config_file=True)
+
+    common_Config_class_attributes_after_initialisation(dev_allowed_stages)
 
 
 def test_forced_config_file_reads_herald_url_and_pattern_language(
     dev_allowed_stages, capsys
 ):
-    reset_Singleton()
+    reset_singleton()
     config_file_directory = "/tmp"
     config_file_name = os.path.join(
         config_file_directory,
@@ -164,10 +208,11 @@ def test_forced_config_file_reads_herald_url_and_pattern_language(
         fp.write("[GLOBAL]\n")
         fp.write("    herald_url = localhost\n")
         fp.write("    pattern_language = DE\n")
-        fp.write("    LOGGING =  INFO\n")
 
     Config.Basic(
-        TEST_SERVICE_NAME, have_config_file=True, have_herald_url_in_config_file=True
+        TEST_SERVICE_NAME,
+        have_config_file=True,
+        have_herald_url_in_config_file=True,
     )
     common_Config_class_attributes_after_initialisation(dev_allowed_stages)
     assert Config.primary_herald_url == "localhost"
@@ -181,10 +226,10 @@ def test_forced_config_file_reads_herald_url_and_pattern_language(
     assert "localhost" in get_data_of_file(Config.log_file_name)
 
 
-def test_forced_config_file_reads_herald_url_and_pattern_language_but_herald_url_is_not_defined(
+def test_forced_config_file_but_herald_url_is_not_defined(
     dev_allowed_stages, capsys
 ):
-    reset_Singleton()
+    reset_singleton()
     config_file_directory = "/tmp"
     config_file_name = os.path.join(
         config_file_directory,
@@ -208,14 +253,17 @@ def test_forced_config_file_reads_herald_url_and_pattern_language_but_herald_url
     assert "not given" in get_data_of_file(Config.log_file_name)
 
 
+#
+# SIGHUP HANDLER THINGS
+#
 def test_sighup_handler_singleton_uninitialized(dev_allowed_stages, capsys):
-    reset_Singleton()
+    reset_singleton()
     with pytest.raises(Config.ForbiddenInitialisationOfSingleton):
         os.kill(os.getpid(), signal.SIGHUP)
 
 
 def test_sighup_handler_singleton_initialized(dev_allowed_stages, capsys):
-    reset_Singleton()
+    reset_singleton()
     os.environ["BASIC_CONFIGFILE_DIR"] = ""
     del os.environ["BASIC_CONFIGFILE_DIR"]
 
@@ -225,16 +273,23 @@ def test_sighup_handler_singleton_initialized(dev_allowed_stages, capsys):
     with open(config_file_name, "w") as fp:
         fp.write("[test_section]\n")
         fp.write("    test_name = test_value  \n")
+        fp.write("[GLOBAL]\n")
+        fp.write("    LOGGING =  DEBUG\n")
 
     Config.Basic(TEST_SERVICE_NAME, have_config_file=True)
     os.kill(os.getpid(), signal.SIGHUP)
     assert "SIGHUP Received. Print Configuration." in get_data_of_file(
         Config.log_file_name
     )
+    print(get_data_of_file(Config.log_file_name))
+    print(get_data_of_file(Config.config_file_name))
 
 
+#
+# ps_shell THINGS
+#
 def test_ps_shell_ls(dev_allowed_stages):
-    reset_Singleton()
+    reset_singleton()
     Config.Basic(TEST_SERVICE_NAME)
     out, err, exit_code, time_needed = Config.ps_shell("ls -a")
     assert "LOG" in out
@@ -244,7 +299,7 @@ def test_ps_shell_ls(dev_allowed_stages):
 
 
 def test_ps_shell_impossible_cmd(dev_allowed_stages):
-    reset_Singleton()
+    reset_singleton()
     Config.Basic(TEST_SERVICE_NAME)
     out, err, exit_code, time_needed = Config.ps_shell("impossible_command")
     assert out == [""]
@@ -253,8 +308,11 @@ def test_ps_shell_impossible_cmd(dev_allowed_stages):
     assert "impossible_command" in get_data_of_file(Config.log_file_name)
 
 
+#
+# exec_interpreter THINGS
+#
 def test_exec_interpreter_from_string(dev_allowed_stages):
-    reset_Singleton()
+    reset_singleton()
     Config.Basic(TEST_SERVICE_NAME)
     out, err, exit_code, time_needed = Config.exec_interpreter_from_string(
         "print('Hello World')"
@@ -265,24 +323,32 @@ def test_exec_interpreter_from_string(dev_allowed_stages):
     assert sys.executable in get_data_of_file(Config.log_file_name)
 
 
+#
+# template_writer THINGS
+#
 def test_template_writer(dev_allowed_stages):
-    reset_Singleton()
+    reset_singleton()
     Config.Basic(TEST_SERVICE_NAME)
     text = Config.template_writer(
-        Patterns.SUBJECT_PATTERNS, "DE", "PROD_LOCKED", {"snapshot_name": "tralala"}
+        Patterns.SUBJECT_PATTERNS,
+        "DE",
+        "PROD_LOCKED",
+        {"snapshot_name": "tralala"},
     )
     assert text == "tralala LOCKED "
 
 
 def test_template_writer_(dev_allowed_stages):
-    reset_Singleton()
+    reset_singleton()
     Config.Basic(TEST_SERVICE_NAME)
 
     with pytest.raises(KeyError):
-        text = Config.template_writer(
+        Config.template_writer(
             Patterns.SUBJECT_PATTERNS,
             "IMPOSSIBLE_KEY",
             "PROD_LOCKED",
             {"snapshot_name": "tralala"},
         )
-    assert "unable to generate string" in get_data_of_file(Config.log_file_name)
+    assert "unable to generate string" in get_data_of_file(
+        Config.log_file_name
+    )

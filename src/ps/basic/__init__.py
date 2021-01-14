@@ -1,5 +1,8 @@
-import pkg_resources
+"""ps.basic package."""
 import logging
+
+import pkg_resources
+
 from .utils import get_html_string, hms_string  # noqa: F401
 
 # get the version number defined in setup.py

@@ -1,14 +1,21 @@
-from typing import Callable, Any
+from typing import Any, Callable
 
 
 class StateError(Exception):
+    """Error in fsm."""
+
     def __init__(self, message):
+        """Error in fsm."""
         self.message = message
 
 
 class State(dict):
+    """State class.
 
-    """State class."""
+    >>> def f(state: State, context: dict) -> str:
+    ...     return "FIN"
+    >>> final = State("FINAL", f, final=True)
+    """
 
     def __init__(
         self,
@@ -28,6 +35,7 @@ class State(dict):
         self.initial = initial
         self.mail_addr = mail_addr
         self.default_transition = default
+        self.tooltip = "None"
 
     def __getitem__(self, input_value):
         """Make a transition to the next state."""
@@ -44,5 +52,8 @@ class State(dict):
 
     def __repr__(self):
         """Represent the object in a string."""
-        return "<%r %s @ 0x%x>" \
-               % (self.name, self.__class__.__name__, id(self))
+        return "<%r %s @ 0x%x>" % (
+            self.name,
+            self.__class__.__name__,
+            id(self),
+        )

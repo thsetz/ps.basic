@@ -1,14 +1,14 @@
-from ps.basic.State import State
+import ps.basic.Config
 from ps.basic import __version__ as version
 from ps.basic import get_html_string
-from ps.basic.Config import logger
-
-# import logging
-# logger = logging.getLogger(__name__)
+from ps.basic.State import State
 
 
 class TransitionError(Exception):
+    """State Exception."""
+
     def __init__(self, message):
+        """State Exception."""
         self.message = message
 
 
@@ -19,10 +19,14 @@ class FiniteStateMachine(object):
         """Construct a FSM."""
         self.name = name
         self.current_state, self.init_state = None, None
-        self.inputs, self.states, = [], []
+        self.inputs, self.states, = (
+            [],
+            [],
+        )
         self.final_states, self.error_states = [], []
 
     def add_state(self, states: [State]) -> None:
+        """Add State."""
         for state in states:
             if state.error:
                 self.error_states.append(state)
@@ -52,18 +56,7 @@ class FiniteStateMachine(object):
     def transition(self, input_value: str):
         """Transition to the next state."""
         current = self.current_state
-        # if current is None:
-        #    raise TransitionError('Current state not set.')
-
-        # destination_state = \
-        #              current.get(input_value, current.default_transition)
         destination_state = current[input_value]
-        # if destination_state is None:
-        #    raise TransitionError('Cannot transition from state %r'
-        #                          ' on input %r.'
-        #                          % (current.name, input_value))
-        # else:
-        #    self.current_state = destination_state
         self.current_state = destination_state
 
     def reset(self):
@@ -82,54 +75,39 @@ class FiniteStateMachine(object):
         """Process input data."""
         self.reset()
         current_state = self.init_state
-        logger.debug(
+        ps.basic.Config.logger.debug(
             "FSM: " + self.name + " started in State " + str(current_state),
             extra={"package_version": version},
         )
         while True:
             my_current_state = self.current_state
-            rval = my_current_state.compute_function(
-                                              my_current_state, context)
-            logger.debug(
-                my_current_state.name
-                + "-compute_function returned  "
-                + str(rval),
-                extra={"package_version": version},
+            rval = my_current_state.compute_function(my_current_state, context)
+            s = f"{my_current_state.name}-compute_function ret {str(rval)}"
+            ps.basic.Config.logger.debug(
+                s, extra={"package_version": version},
             )
-            print(type(rval))
-            # if isinstance(rval,State):
-            #    logger.debug("%s.run new step: %s's \
-            #                   default_handler left context as %s"\
-            #                   %( self.name, my_current_state.name, \
-            #                   get_html_string(context)), \
-            #                   extra={"package_version":version})
-            # else:
-            #    logger.debug("%s.run new step: %s's compute function\
-            #                    left context as %s"\
-            #                    %( self.name, my_current_state.name, \
-            #                    get_html_string(context)), \
-            #                    extra={"package_version":version})
-            logger.debug(
-                "%s.run new step: %s's compute function left context as %s"
-                % (self.name, my_current_state.name, get_html_string(context)),
-                extra={"package_version": version},
+            s = f"{self.name}.run new step: {my_current_state.name} compute"
+            s += f" function left context as {get_html_string(context)}"
+            ps.basic.Config.logger.debug(
+                s, extra={"package_version": version},
             )
             self.inputs.append(rval)
             if my_current_state.final is True:
-                logger.debug(
-                    "Leave run, as " + self.current_state.name +
-                    " is a final state ",
+                ps.basic.Config.logger.debug(
+                    f"""Leave run, as
+                     {self.current_state.name}
+                      is a final state """,
                     extra={"package_version": version},
                 )
                 break
             else:
                 self.transition(rval)
-                logger.debug(
-                    "TRANSITION: from State "
-                    + my_current_state.name
-                    + "<br> ONInput:   '"
-                    + str(rval)
-                    + "'<br>To State: "
-                    + self.current_state.name,
+                ps.basic.Config.logger.debug(
+                    f"""TRANSITION: from State
+                    {my_current_state.name}
+                    <br> ONInput:
+                    {str(rval)}
+                    <br>To State:
+                    {self.current_state.name}""",
                     extra={"package_version": version},
                 )

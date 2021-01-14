@@ -1,57 +1,55 @@
-from ps.basic.State import StateError
-from pprint import pformat
 import inspect
+from pprint import pformat
+
+from ps.basic.State import StateError
 
 
-def get_graph(fsm, title: str=None):
+def get_graph(fsm, title: str = None):
     """Generate a DOT graph with pygraphviz."""
     import pygraphviz as pgv
 
-    FSM_DOT_ATTRS = {
+    fsm_dot_attrs = {
         "directed": True,
         "strict": False,
         "rankdir": "LR",
         "ratio": "0.3",
     }
 
-    STATE_DOT_ATTRS = {
+    state_dot_attrs = {
         "shape": "circle",
         "height": "1.2",
     }
 
-    DOT_FINAL = "doublecircle"
+    dot_final = "doublecircle"
 
     title = fsm.name
 
-    fsm_graph = pgv.AGraph(title=title, size="10.3, 5.3", **FSM_DOT_ATTRS)
-    fsm_graph.node_attr.update(STATE_DOT_ATTRS)
+    fsm_graph = pgv.AGraph(title=title, size="10.3, 5.3", **fsm_dot_attrs)
+    fsm_graph.node_attr.update(state_dot_attrs)
 
     if fsm.init_state is None:
         raise StateError("A FSM must have a defined init_state")
 
     for state in [fsm.init_state] + fsm.states:
-        print("STATE GENERATOR " + state.name)
         color = "black"
-        shape = STATE_DOT_ATTRS["shape"]
+        shape = state_dot_attrs["shape"]
         if hasattr(fsm, "final_states"):
             if id(state) in [id(s) for s in fsm.final_states]:
-                shape = DOT_FINAL
+                shape = dot_final
         if hasattr(fsm, "error_states"):
             if id(state) in [id(s) for s in fsm.error_states]:
                 color = "red"
 
         try:
             tooltip_str = pformat(inspect.getdoc(state.compute_function))
-            tooltip = tooltip_str.replace("\\n", "&#013;")
-        except AttributeError:
-            tooltip = "no tooltip"
+            state.tooltip = tooltip_str.replace("\\n", "&#013;")
+        except AttributeError:  # pragma: no cover
+            state.tooltip = "no tooltip"
 
         fsm_graph.add_node(
-            n=state.name, shape=shape, color=color, tooltip=tooltip
+            n=state.name, shape=shape, color=color, tooltip=state.tooltip
         )
         if state.mail_addr:
-            print(state.mail_addr)
-            print(type(state.mail_addr))
             lis = eval(state.mail_addr)
             for d in lis:
                 l2 = d.keys()
@@ -64,7 +62,7 @@ def get_graph(fsm, title: str=None):
                     style="filled",
                     fillcolor="lightseagreen:orangered",
                     color=color,
-                    tooltip=tooltip,
+                    tooltip=state.tooltip,
                 )
                 fsm_graph.add_edge(
                     state.name,
@@ -73,7 +71,7 @@ def get_graph(fsm, title: str=None):
                     label="send email ",
                     style="dashed",
                     color=color,
-                    tooltip=tooltip,
+                    tooltip=state.tooltip,
                 )
 
     fsm_graph.add_node("null", shape="plaintext", label=" ")
@@ -92,14 +90,14 @@ def get_graph(fsm, title: str=None):
                     state.default_transition.name,
                     label="error",
                     color="red",
-                    tooltip="werner",
+                    tooltip=state.tooltip,
                 )
             else:
                 fsm_graph.add_edge(
                     state.name,
                     state.default_transition.name,
                     label="else",
-                    tooltip="werner",
+                    tooltip=state.tooltip,
                 )
 
     return fsm_graph

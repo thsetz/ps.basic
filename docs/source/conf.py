@@ -39,6 +39,7 @@ except:
 # sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.join(os.path.abspath('.'), '../../..'))
 sys.path.insert(1, os.path.join(os.path.abspath('.'), '../..'))
+sys.path.insert(2, "/Users/setzt/NEW/ps.basic/tests")
 sys.path.insert(20, os.path.join(os.path.abspath('.'), '..'))
 
 for i in sys.path: print (i)
@@ -58,6 +59,7 @@ for i in sys.path: print (i)
 # ones.
 extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
+    'sphinx.ext.autosectionlabel',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
@@ -82,9 +84,9 @@ master_doc = 'index'
 # General information about the project.
 
 ##################################################
-project = 'setz.basic'
-copyright = '2019, Dr. Thomas Michael Setz'
-author = 'Dr. Thomas Michael Setz'
+project = 'ps.basic'
+copyright = '2021,  Thomas Setz'
+author = 'Thomas Setz'
 # General information about the project.
 #project   = u'ps.deploy-products2intern'
 #project   = config_parser.get("GLOBAL", 'project_name')
@@ -105,7 +107,7 @@ release = __version__
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = 'de'
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -180,7 +182,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'setzbasic.tex', 'setz.basic Documentation',
-     'Dr. Thomas Michael Setz', 'manual'),
+     'Thomas Setz', 'manual'),
 ]
 
 

@@ -1,20 +1,24 @@
 __doc__ = """ The Basic Module delivers the *Basis* for Systems in the Production
      Systems world."""
 
-import os
 import logging
 import logging.handlers
+import os
+import signal
 import sys
+import tempfile
 import time
 import traceback
-from subprocess import Popen, PIPE
-import tempfile
-import signal
-
-from configparser import ConfigParser, ParsingError, NoSectionError, NoOptionError
-
+from configparser import (
+    ConfigParser,
+    NoOptionError,
+    NoSectionError,
+    ParsingError,
+)
 from socket import gethostname
-from ps.basic import __version__, DEV_STAGES, hms_string
+from subprocess import PIPE, Popen
+
+from ps.basic import DEV_STAGES, __version__, hms_string
 from ps.basic.Patterns import LOGGING_PATTERNS, PATTERN_LANGUAGES
 
 not_yet_defined = "not_yet_defined"
@@ -47,7 +51,8 @@ MAX_SIZE_FOR_A_ROTATING_LOGFILE = 2000000
 MAX_NUMBER_OF_OLD_ROTATING_LOGFILES = 10
 PATTERN_LANGUAGE = "EN"
 
-def sighup_handler(signum: int, frame ):
+
+def sighup_handler(signum: int, frame):
     global config_parser, logger
     if config_parser != not_yet_defined:
         logger.debug(
@@ -64,7 +69,7 @@ def sighup_handler(signum: int, frame ):
 signal.signal(signal.SIGHUP, sighup_handler)
 
 
-def log_config_data(config_parser: ConfigParser, logger: logging.Logger ):
+def log_config_data(config_parser: ConfigParser, logger: logging.Logger):
     html_string = "<table>"
     for section_name in config_parser.sections():
         html_string += "<tr><td>%s</td></tr>" % (section_name)
@@ -73,24 +78,31 @@ def log_config_data(config_parser: ConfigParser, logger: logging.Logger ):
                 str(name),
                 str(value),
             )
-            if section_name == "GLOBAL" and name == "LOGGING":
-                logger.setLevel(int(value))
+            #  name is lower() of the real name as default of config_parser
+            if section_name == "GLOBAL" and name == "logging":
+                numeric_level = getattr(logging, value.upper(), None)
+                #                print(f"CONF2 Set Logging Level to {value}")
+                logger.setLevel(numeric_level)
         html_string += "</table>"
         if html_string != "<table></table>":
-            logger.debug(f"{html_string}", extra={"package_version": __version__})
+            logger.debug(
+                f"{html_string}", extra={"package_version": __version__}
+            )
 
 
 class Basic(object):
+    """The Basic Class."""
+
     _instance = None
 
     def __init__(
         self,
         service_name_p: str,
-        have_herald_url_in_config_file :bool =False,
-        have_config_file :bool =False,
-        guarded_by_lockfile:bool =False
+        have_herald_url_in_config_file: bool = False,
+        have_config_file: bool = False,
+        guarded_by_lockfile: bool = False,
     ):
-        """"""
+        """Create the singleton."""
         global service_name, dev_stage, suffix, logging_port
         global logging_bridge_port, webserver_port, logging_bridge_port
         global logging_level, log_file_name, logger, config_file_name
@@ -121,7 +133,7 @@ class Basic(object):
             )
             primary_herald_url = ""
             lock_file_name = os.path.join(
-                os.getcwd(), f"{service_name_p}_lock{suffix}" 
+                os.getcwd(), f"{service_name_p}_lock{suffix}"
             )
             is_testing = os.getenv("IS_TESTING", "NOT TESTING")
 
@@ -129,7 +141,7 @@ class Basic(object):
             if not os.path.isdir("LOG"):
                 try:
                     os.mkdir("LOG")
-                except FileNotFoundError:
+                except FileNotFoundError:  # pragma: no cover
                     sys.stderr.write(
                         f"Error creating LOG DIR in {os.getcwd()}: EXIT Now"
                     )
@@ -159,7 +171,7 @@ class Basic(object):
 
             logger.setLevel(logging_level)
             logger.debug(
-                "Logging initialized for pid {os.getpid()}",
+                f"Logging initialized for pid {os.getpid()}",
                 extra={"package_version": __version__},
             )
 
@@ -174,13 +186,17 @@ class Basic(object):
             )
 
     def __handle_configfile__(self, have_herald_url_in_config_file: bool):
-        global config_parser, config_file_name
+        """Integrate the configfile."""
+        global config_parser, config_file_name, PATTERN_LANGUAGE
         global config_file_directory, primary_herald_url
         config_file_directory = os.getenv("BASIC_CONFIGFILE_DIR", False)
         if config_file_directory:
             if not os.path.isdir(config_file_directory):
                 s = f"BASIC_CONFIGFILE_DIR {config_file_directory} not found."
-                logger.fatal(s, extra={"package_version": __version__},)
+                logger.fatal(
+                    s,
+                    extra={"package_version": __version__},
+                )
                 sys.stderr.write(s)
                 raise ForbiddenInitialisationOfSingleton(s)
             else:
@@ -202,19 +218,9 @@ class Basic(object):
                 config_parser.read(config_file_name)
             else:
                 s = f"No config file {config_file_name} "
-                s += "given but it's usage is mandatory"
-                logger.debug(s, extra={"package_version": __version__})
-                if have_herald_url_in_config_file:
-                    sys.stderr.write(s)
-                    logger.fatal(s, extra={"package_version": __version__})
-                if is_testing == "YES":
-                    logger.info(
-                        "not exiting while testing ",
-                        extra={"package_version": __version__},
-                    )
-                else:
-                    self.__exit__(1, 2, 3)
-                    sys.exit(1)
+                s += "given, but it's usage is mandatory."
+                logger.fatal(s, extra={"package_version": __version__})
+                raise ForbiddenInitialisationOfSingleton(s)
 
         except (NoSectionError, ParsingError, NoOptionError) as e:
             e = sys.exc_info()[1]
@@ -226,7 +232,7 @@ class Basic(object):
             self.__exit__(1, 2, 3)
             if is_testing == "YES":
                 raise e
-            else:
+            else:  # pragma: no cover
                 raise e
                 sys.exit(1)
         except SystemExit:  # pragma: no cover
@@ -240,32 +246,34 @@ class Basic(object):
         if have_herald_url_in_config_file:
             try:
                 primary_herald_url = config_parser.get("GLOBAL", "herald_url")
-            except (NoSectionError, ParsingError, NoOptionError) as e:
+            except (NoSectionError, ParsingError, NoOptionError):
                 s = "Value of herald_url in GLOBAL section of "
                 s += f"{config_file_name} not given - but needed. EXIT NOW"
-                logger.fatal(s, extra={"package_version": __version__},)
+                logger.fatal(
+                    s, extra={"package_version": __version__},
+                )
                 sys.stderr.write(s)
                 raise ForbiddenInitialisationOfSingleton(s)
-                # self.__exit__( 1,2,3)
-                # sys.exit(1)
-
         try:
             PATTERN_LANGUAGE = config_parser.get("GLOBAL", "pattern_language")
             if PATTERN_LANGUAGE not in PATTERN_LANGUAGES:
                 s = "Value of pattern_language in GLOBAL section of "
                 s += f"{config_file_name}  not allowed. EXIT NOW"
-                logger.fatal(s , extra={"package_version": __version__},)
+                logger.fatal(
+                    s, extra={"package_version": __version__},
+                )
                 sys.stderr.write(s)
-                self.__exit__(1, 2, 3)
-                sys.exit(1)
-        except (NoSectionError, ParsingError, NoOptionError) as e:
+                raise ForbiddenInitialisationOfSingleton(s)
+        except (NoSectionError, ParsingError, NoOptionError):
             PATTERN_LANGUAGE = "EN"
+            d = {}
+            d["PATTERN_LANGUAGE"] = PATTERN_LANGUAGE
             logger.debug(
                 template_writer(
                     LOGGING_PATTERNS,
                     PATTERN_LANGUAGE,
                     "LANGUAGE_PATTERN_FAILED",
-                    locals(),
+                    d,
                 ),
                 extra={"package_version": __version__},
             )
@@ -275,7 +283,7 @@ class Basic(object):
         log_config_data(config_parser, logger)
 
     def __handle_lockfile__(self):
-        """ """
+        """Handle lockfile."""
         global i_have_lock, logger, is_testing, lock_file_name
 
         def init_lockfile(fq_path_to_lockfile_p):
@@ -292,8 +300,8 @@ class Basic(object):
                 init_lockfile(lock_file_name)
                 i_have_lock = True
             except FileNotFoundError:  # pragma: no cover
-                s= f"Error opening/writing lock File {lock_file_name}"
-                s+=f"EXIT Now version {__version__}"
+                s = f"Error opening/writing lock File {lock_file_name}"
+                s += f"EXIT Now version {__version__}"
                 logger.exception(s)
                 sys.stderr.write(s)
                 sys.stderr.write(traceback.format_exc())
@@ -309,37 +317,39 @@ class Basic(object):
             st = os.stat(lock_file_name)
             age = hms_string(time.time() - st.st_mtime)
             s = f"{lock_file_name}  locked by process with pid "
-            s+= f"{pid}  for: {age} : version {__version__}" 
+            s += f"{pid}  for: {age} : version {__version__}"
             logger.info(s)
             try:
                 os.kill(int(pid), 0)
-                s=f"process with pid {pid} is still alive Exit now "
+                s = f"process with pid {pid} is still alive Exit now "
                 logger.info(s, extra={"package_version": __version__})
                 raise LockedInitialisationOfSingleton(s)
             except OSError:
-                s= "process with pid {pid}s is not alive:\
+                s = "process with pid {pid}s is not alive:\
                      Will Remove the lock file"
-                logger.error(s, extra={"package_version": __version__},)
+                logger.error(
+                    s,
+                    extra={"package_version": __version__},
+                )
                 sys.stderr.write(s)
                 os.remove(lock_file_name)
                 raise LockedInitialisationOfSingleton(s)
 
-    def verbose():
-        """ Print log messages to stdout too """
+    def verbose(self):
+        """Print log messages to stdout too."""
         global logger
-        if logger == not_yet_defined:
-            raise ForbiddenInitialisationOfSingleton(
-                "verbose called but module not yet initiated"
-            )
+        # if logger == not_yet_defined:
+        #    raise ForbiddenInitialisationOfSingleton(
+        #        "verbose called but module not yet initiated"
+        #    )
         ch = logging.StreamHandler()
         ch.setLevel(logging.DEBUG)
-        formater = logging.Formatter(
-            "%(asctime)s   %(lineno)d - %(message)s"
-        )
+        formater = logging.Formatter("%(asctime)s   %(lineno)d - %(message)s")
         ch.setFormatter(formater)
         logger.addHandler(ch)
 
     def __exit__(self, exc_type, exc_value, traceback):
+        """Allow to use in with."""
         if exc_type == 1 and exc_value == 2 and traceback == 3:
             try:
                 if os.path.isfile(lock_file_name):
@@ -349,7 +359,7 @@ class Basic(object):
                     )
                     os.unlink(lock_file_name)
             except FileNotFoundError:  # pragma: no cover
-                s =f"ERR: remove lock_file: version {__version__}" 
+                s = f"ERR: remove lock_file: version {__version__}"
                 logger.exception(s)
                 sys.stdout.write(s)
                 sys.stderr.write(s)
@@ -362,18 +372,18 @@ class Basic(object):
             sys.stderr.write("Leave Singleton with nonstandard __exit__")
 
     def __del__(self):
-        """ default destructor currently calling __exit__ only
-            if we have a lockfile"""
+        """Allow to use in with."""
+#        #pass
+#        # rudiments from python2 - seems to be not needed any longer
         if i_have_lock:
             self.__exit__(1, 2, 3)
 
 
 class ContextFilter(logging.Filter):
-    """ Is used as a logging.filter and merges additional
-        values into the logging message """
+    """Merges additional values into the logging message."""
 
     def filter(self, record):
-
+        """Filter log msg."""
         if "package_version" not in record.__dict__:
             record.package_version = "undef"
         record.SYSTEM_ID = os.getenv("SYSTEM_ID", "None")
@@ -386,22 +396,25 @@ class ContextFilter(logging.Filter):
 
 
 class LockedInitialisationOfSingleton(Exception):
+    """Exception Handler."""
+
     def __init__(self, message):
+        """Write a message."""
         self.message = message
 
 
 class ForbiddenInitialisationOfSingleton(Exception):
+    """Exception Handler."""
+
     def __init__(self, message):
+        """Write a message."""
         self.message = message
 
 
-
-
-def template_writer(patterns_p: dict, pattern_offset_p: dict, pattern_p: dict, d_vars_p: dict):
-    """
-    A helper function for writing strings  from patterns
-    """
-
+def template_writer(
+    patterns_p: dict, pattern_offset_p: dict, pattern_p: dict, d_vars_p: dict
+):
+    """Template writer."""
     try:
         template = patterns_p[pattern_offset_p][pattern_p]
         return template % (d_vars_p)
@@ -417,32 +430,20 @@ def ps_shell(cmd_p: str, env_p: dict = None):
     """ """
     global logger, service_name
     success = "SUCCESS"
-    try:
-        start_time = time.time()
-        child = Popen(
-            cmd_p,
-            shell=True,
-            stdout=PIPE,
-            stderr=PIPE,
-            env=env_p,
-            universal_newlines=True,
-        )
-        (stdout, stderr) = child.communicate()
-        exitcode = child.poll()
-        end_time = time.time()
-
-    except FileNotFoundError:  
-        sys.stdout.write(
-            "%s: Exception while calling %s" % (service_name, cmd_p)
-        )
-        logger.exception("Exception while calling %s" % (cmd_p))
-        stdout = "ERROR"
-        stderr = traceback.format_exc()
-        exitcode = 1
-        end_time = time.time()
+    start_time = time.time()
+    child = Popen(
+        cmd_p,
+        shell=True,
+        stdout=PIPE,
+        stderr=PIPE,
+        env=env_p,
+        universal_newlines=True,
+    )
+    (stdout, stderr) = child.communicate()
+    exitcode = child.poll()
+    end_time = time.time()
 
     time_needed = hms_string(end_time - start_time)
-    time_needed = "unknown"
     if exitcode != 0:
         success = "ERROR"
     logger.debug(
@@ -469,9 +470,9 @@ def exec_interpreter_from_string(source_code: str):
     try:
         tmp.write(source_code)
         tmp.flush()
-        cmd = "%s %s" % (sys.executable, tmp.name)
+        cmd = f"{sys.executable}  {tmp.name}"
         out, err, exit, time_needed = ps_shell(cmd)
     finally:
-        tmp.close
+        tmp.close()
 
     return out, err, exit, time_needed

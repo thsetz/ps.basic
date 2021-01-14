@@ -1,17 +1,27 @@
-import pytest
+"""test_ps_basic_fsm."""
 import os
 import pprint
-from ps.basic import Config
-from t_utils import TEST_SERVICE_NAME
+
+import pytest
+
+# Import of the fsm modules has to be done after initialisation of the
+# Config Module as that needs the logger (Config.logger) to be set up.
+from ps.basic import Config  # noqa:  I100
 
 os.environ["IS_TESTING"] = "YES"
-Config.Basic(TEST_SERVICE_NAME)
-from ps.basic.State import State, StateError
-from ps.basic.fsm import FiniteStateMachine, TransitionError
-from ps.basic.get_graph import get_graph
+os.environ["DEV_STAGE"] = "TESTING"
+Config.Basic("TEST_SERVICE_NAME")
+
+from ps.basic.State import State, StateError  # noqa: E402 I202
+from ps.basic.fsm import FiniteStateMachine, TransitionError  # noqa: E402
+from ps.basic.get_graph import get_graph  # noqa: E402
+
+
+# from t_utils import TEST_SERVICE_NAME, reset_singleton
 
 
 def f(state: State, context: dict) -> str:
+    """test_no_initial_stage_raise_Attribute_error."""
     context[state.name] = "visited"
     print(state.name)
     context[state.name] = state.name
@@ -24,7 +34,8 @@ def f(state: State, context: dict) -> str:
         return "ii"
 
 
-def test_no_initial_stage_raise_Attribute_error():
+def test_no_initial_stage_raise_attribute_error():
+    """test_no_initial_stage_raise_Attribute_error."""
     stage1 = State("STAGE1", f)
     fsm = FiniteStateMachine("TheMachine")
     fsm.add_state([stage1])
@@ -32,7 +43,8 @@ def test_no_initial_stage_raise_Attribute_error():
         fsm.run({})
 
 
-def test_input_not_in_alphabet_raises_Transition_error():
+def test_input_not_in_alphabet_raises_transition_error():
+    """test_no_initial_stage_raise_Attribute_error."""
     stage1 = State("STAGE1", f)
     fsm = FiniteStateMachine("TheMachine")
     fsm.add_state([stage1])
@@ -40,7 +52,8 @@ def test_input_not_in_alphabet_raises_Transition_error():
         fsm.process(["a"])
 
 
-def test_multiple_initial_stages_raise_Transition_error():
+def test_multiple_initial_stages_raise_transition_error():
+    """test_no_initial_stage_raise_Attribute_error."""
     start = State(
         "START",
         f,
@@ -57,6 +70,9 @@ def test_multiple_initial_stages_raise_Transition_error():
 
 
 def test_attributes_are_set():
+    """test_no_initial_stage_raise_Attribute_error."""
+    #    #reset_singleton()
+    #    #Config.Basic(TEST_SERVICE_NAME)
     final = State("FINAL", f, final=True)
     error = State(
         "ERROR",
@@ -95,9 +111,10 @@ def test_attributes_are_set():
 #
 # Graph Printing
 #
-def test_get_graph_without_initi_state_raises_StateError():
+def test_get_graph_without_initi_state_raises_stateerror():
+    """test_no_initial_stage_raise_Attribute_error."""
     final = State("FINAL", f, final=True)
     fsm = FiniteStateMachine("TheMachine")
     fsm.add_state([final])
     with pytest.raises(StateError):
-        graph = get_graph(fsm)
+        get_graph(fsm)

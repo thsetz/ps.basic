@@ -22,7 +22,7 @@ SUBJECT_PATTERNS = {
               %(user_identification)s:%(PID)s transfer ",
         "RSYNC_FAILED": "Der rsync Aufruf/transfer hatte einen Fehler. \
               Abort now.",
-        "RSYNC_SUCC":  "SUCCESS rsync uebermittelte \
+        "RSYNC_SUCC": "SUCCESS rsync uebermittelte \
               %(asia_cloud_host)s/%(srcdir_on_asia_host)\
               s ==>%(PATH_TO_LOCAL_MIRROR_DIR)s",
         "QUARANTINED_TRANSFER": "Fehler beim Viruscheck",
@@ -271,15 +271,15 @@ LOGGING_PATTERNS = {
     },
 }
 
-PATTERN_NAMES = \
-          [name for name in globals().keys() if name.endswith("PATTERNS")]
+PATTERN_NAMES = [
+    name for name in globals().keys() if name.endswith("PATTERNS")
+]
 
 LOCAL_SHELL_CMDS = {
     # USED IN PREPARE
     "L_TOUCH_CLOUD_LOCKFILE": "touch %(cloud_lockfile_name)s",
     "L_TOUCH_PROD_LOCKFILE": "touch %(product_lockfile_name)s",
-    "L_ZIP_TAR_INTO_PRODUCT_DIR":
-        "gzip %(sourcedir_p)s/ERROR/%(snapshot_name)s-\
+    "L_ZIP_TAR_INTO_PRODUCT_DIR": "gzip %(sourcedir_p)s/ERROR/%(snapshot_name)s-\
          %(prepare_started_at)s.tar.gz \
          %(sourcedir_p)s/%(snapshot_name)s ",
     "L_CREATE_ZIP_TAR_IN_ERR_DIR": "cd %(sourcedir_p)s ; \
@@ -306,42 +306,28 @@ LOCAL_SHELL_CMDS = {
 # variable DIRECTION_ISOLATOR.
 
 REMOTE_SHELL_CMDS = {
-    "R_FIND_YOUNGEST_PRODUCT_DIR":
-        "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* \
+    "R_FIND_YOUNGEST_PRODUCT_DIR": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* \
         -maxdepth 0 -type d | tail -1",
-    "R_FIND_YOUNGEST_PRODUCT_DIR":
-        "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* \
+    "R_FIND_YOUNGEST_PRODUCT_DIR": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* \
         -maxdepth 0 -type d | tail -1",
-    "R_FIND_OK_FILE_OF_CURRENT_TRANSMISSION":
-        "find %(destination_dir)s/%(expected_name_of_ok_file)s \
+    "R_FIND_OK_FILE_OF_CURRENT_TRANSMISSION": "find %(destination_dir)s/%(expected_name_of_ok_file)s \
         -maxdepth 0 -type f",
-    "R_CP_OLD_TO_STATIC_LINKED_NEW":
-        "cp -al %(dirname_found)s \
+    "R_CP_OLD_TO_STATIC_LINKED_NEW": "cp -al %(dirname_found)s \
         %(destination_dir)s/%(product_id_stamp_p)s",
-    "R_TOUCH_TRANSMISSION_OK_FILE":
-        "touch %(destination_dir)s/%(product_id_stamp_p)s.ok",
-    "R_GET_AMOUNT_PRODUCT_DIRS":
-        "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* \
+    "R_TOUCH_TRANSMISSION_OK_FILE": "touch %(destination_dir)s/%(product_id_stamp_p)s.ok",  # noqa: E501
+    "R_GET_AMOUNT_PRODUCT_DIRS": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* \
         -maxdepth 0 -type d | wc -l",
-    "R_NAME_OF_OLDEST_PRODUCT_DIR":
-        "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* \
+    "R_NAME_OF_OLDEST_PRODUCT_DIR": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* \
         -maxdepth 0 -type d | head -1",
-    "R_REMOVE_OLDEST_PRODUCT_DIR":
-        "rm -rf %(name_of_oldest_product_dir)s*",
-    "R_GET_AMOUNT_PRODUCT_OK_FILES":
-        "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s*ok \
+    "R_REMOVE_OLDEST_PRODUCT_DIR": "rm -rf %(name_of_oldest_product_dir)s*",
+    "R_GET_AMOUNT_PRODUCT_OK_FILES": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s*ok \
         -maxdepth 0 -type f | wc -l",
-    "R_GET_OLDEST_PRODUCT_DIR":
-        "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* \
+    "R_GET_OLDEST_PRODUCT_DIR": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* \
         -maxdepth 0 -type d | head -1",
-    "R_RM_OLDEST_PRODUCT_DIR":
-        "rm -rf %(oldest_data)s*",
-    "R_LIST_PRODUCT_OK_FILES":
-        "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s*ok \
+    "R_RM_OLDEST_PRODUCT_DIR": "rm -rf %(oldest_data)s*",
+    "R_LIST_PRODUCT_OK_FILES": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s*ok \
         -maxdepth 0 -type f",
-    "R_LIST_PRODUCT_DIRS":
-        "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* \
+    "R_LIST_PRODUCT_DIRS": "find %(destination_dir)s/%(product_name)s%(DIRECTION_ISOLATOR)s* \
         -maxdepth 0 -type d ",
-    "R_FIND_CLEANME_DIRS":
-        "find %(dstdir_on_eu_host)s -name PI*CLEANME  -print  ",
+    "R_FIND_CLEANME_DIRS": "find %(dstdir_on_eu_host)s -name PI*CLEANME  -print  ",  # noqa: E501
 }

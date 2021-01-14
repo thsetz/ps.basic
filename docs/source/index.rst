@@ -13,8 +13,9 @@ Contents:
    overview
    usage
    ps
-..   tests
-
+   testing
+   developing
+..
    CHANGES
 
 Indices and tables

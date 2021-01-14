@@ -1,17 +1,20 @@
+import logging
+import os
 from importlib import reload
-import pprint
 from socket import gethostname
-import ps, logging, os
+
+import ps
 from ps.basic import Config, DEV_STAGES
-import time
+
 TEST_SERVICE_NAME = "test_service_name"
 
-def reset_Singleton(remove_log_file=True):
-    """For testing reset the singleton's state to initial values while testing"""
+
+def reset_singleton(remove_log_file=True):
+    """Reset the singleton's state initial values while testing."""
     if remove_log_file:
         if os.path.isfile(ps.basic.Config.log_file_name):
             os.remove(ps.basic.Config.log_file_name)
-    Config = reload(ps.basic.Config)
+    Config = reload(ps.basic.Config)  # noqa: N806
     Config.Basic._instance = None
     properties = [
         "service_name",
@@ -41,13 +44,13 @@ def reset_Singleton(remove_log_file=True):
 def get_data_of_file(filename_p: str):
     with open(filename_p, "r+t") as fp:
         data = fp.read()
-        ls = data.split("\n")
-        for l in ls:
-            print(l)
+        lines = data.split("\n")
+        for line in lines:
+            print(line)
     return data
 
 
-def common_Config_class_attributes_after_initialisation(
+def common_Config_class_attributes_after_initialisation(  # noqa: N802
     stage_p: str, test_service_name: str = TEST_SERVICE_NAME
 ):
     assert Config.service_name == test_service_name
@@ -61,7 +64,10 @@ def common_Config_class_attributes_after_initialisation(
     )
     assert Config.logging_port == DEV_STAGES[stage_p]["logging_port"]
     assert Config.webserver_port == DEV_STAGES[stage_p]["logging_port"] + 1
-    assert Config.logging_bridge_port == DEV_STAGES[stage_p]["logging_bridge_port"]
+    assert (
+        Config.logging_bridge_port
+        == DEV_STAGES[stage_p]["logging_bridge_port"]  # noqa: W503
+    )
     assert Config.logging_level == DEV_STAGES[stage_p]["logging_level"]
     assert Config.admin_mail == DEV_STAGES[stage_p]["l_admin_mail"]
     assert Config.herald_sqlite_filename == os.path.join(

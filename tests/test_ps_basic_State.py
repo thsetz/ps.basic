@@ -1,13 +1,21 @@
-import pytest
+"""Test State Module."""
+
 import os
+import pprint
+
 from ps.basic.State import State, StateError
+
+import pytest
+
 
 os.environ["IS_TESTING"] = "YES"
 
 
 def f(state: State, context: dict) -> str:
+    """transition_func."""
     context[state.name] = "visited"
-    print(state.name)
+    #    print(state.name)
+    d = {}
     d[state.name] = state.name
     print(pprint.pformat(context))
     if state.name == "START":
@@ -19,39 +27,43 @@ def f(state: State, context: dict) -> str:
 
 
 def test_attributes_are_set():
+    """test_attributes_are_set."""
     global f
     final = State("FINAL", f, final=True)
     assert final.name == "FINAL"
     assert final.compute_function == f
-    assert final.error == False
-    assert final.initial == False
-    assert final.final == True
-    assert final.default_transition == None
+    assert not final.error  # ==> False
+    assert not final.initial  # ==> False
+    assert final.final  # ==> True
+    assert final.default_transition is None
 
 
 def test_default_transition_is_set():
+    """test_default_transition_is_set."""
     global f
     final = State("FINAL", f, final=True)
     initial = State("INITIAL", f, initial=True, default=final)
     assert initial.default_transition == final
 
 
-def test_strings_for_input_alphabet_could_be_ser():
+def test_strings_for_input_alphabet_could_be_set():
+    """test_strings_for_input_alphabet_could_be_set."""
     global f
     final = State("FINAL", f, final=True)
-    initial = State("INITIAL", f, initial=True, default=final)
     intermediate = State("INTERMEDIATE", f)
     intermediate["input2"] = final
     assert intermediate["input2"] == final
 
 
 def test_wrong_result_state_on_input_raise_error():
+    """test_wrong_result_state_on_input_raise_error."""
     with pytest.raises(StateError):
         intermediate = State("INTERMEDIATE", f)
         intermediate["input2"] = "xx"
 
 
 def test_repr_works():
+    """test_repr_works."""
     global f
     final = State("FINAL", f, final=True)
     x = repr(final)

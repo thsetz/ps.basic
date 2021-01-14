@@ -2,14 +2,18 @@
 Usage
 =====
 
+.. Setup ( Not Visible)
+    >>> import os
+   
+   
 The ``ps.basic`` package implements utilities helping in the development of distributed 
 services within the ps environment.
 
-    - easing setup for logging
     - easing setup for staging environments
-    - easing setup for config files
+    - easing setup for logging
+    - easing setup for configuration files
+    - locking mechanisms to guard against execution of multiple service instances
     - basics to implement and document services based on finite state machines 
-    - locking mechanisms to guard against execution of multiple servive instances
  
 
 Core Mechanism Easing setup for staging environments
@@ -46,7 +50,7 @@ values for the staging environments.
 are used with the help of `ps.herald and ps_bridge <https://psherald.readthedocs.io/en/latest/>`_: to
 handle the streams of logging messages.
 ``suffix`` is  used to define a DEV_STAGE specific suffix for configuration and logging files.
-``l_admin_mail`` provides a list of email addreses to be used to send emails to service specific admins.
+``l_admin_mail`` provides a list of email addresses to be used to send emails to service specific admins.
 
 Initially the attributes in ``ps.basic.Config`` are undefined.
 
@@ -82,7 +86,7 @@ It will have set values at least for logging files
     >>> assert (ps.basic.Config.log_file_name.endswith("LOG/service_name_d.log"))
 
  
-The following lines are here to reset the doctest environment - they are NOT needed in the application.
+.. The following lines are here to reset the doctest environment - they are NOT needed in the application.
     >>> def reset_singleton():
     ...     from importlib import reload  
     ...     ps.basic.Config = reload(ps.basic.Config)
@@ -94,7 +98,7 @@ Easing setup for logging
 
 Given the above initialisation: 
 
-    - a directory named ``LOG`` inside the workingdirectory is created
+    - a directory named ``LOG`` inside the working directory is created
     - a file named ``LOG/service_name_d.log`` holding log entries is created
 
     >>> assert os.path.isdir("LOG")
@@ -110,11 +114,13 @@ TIME                ... LEVEL ... MESSAGE
 2020-12-11 09:53:12 ... DEBUG ... Error setting PATTERN_LANGUAGE. Use default EN.
 =================== === ===== === ==================================================================
 
-A Module beeing used in the application could simply add additional log messages to the logging ...
+A Module being used in the application could simply add additional log messages to the logging ...
 
     >>> from ps.basic.Config import logger
     >>> logger.info("Another log message") 
     >>> logger.fatal("Another log message") 
+
+.. Reset the environment ...
     >>> reset_singleton()
 
 This would end up in additional entries in the log file ...
@@ -136,6 +142,12 @@ Furthermore with the help of `ps.herald and ps_bridge <https://psherald.readthed
     - an easy to use GUI to analyze the logging messages is available
     - tools to establish a distributed logging environment are available. 
 
+Using ps_herald those log messages would be displayed as given in the following picture: 
+
+.. image:: logging1.png
+
+
+
 
 .. note::
    To get access to the ps logging environment, a module only needs to:
@@ -144,10 +156,10 @@ Furthermore with the help of `ps.herald and ps_bridge <https://psherald.readthed
         application)
       - import the logger from ps.basic.Config
 
-Easing setup for config files 
-=============================
+Easing setup for configuration files 
+====================================
 
-The ``ps.basic.config`` module  additionaly defines a config_parser (Standard python ConfigParser 
+The ``ps.basic.config`` module  additionally defines a config_parser (Standard python ConfigParser 
 instance) through which access to  the service specific configuration is possible/enforced from 
 every module of the application.
 
@@ -161,7 +173,8 @@ anywhere within the application. In the example we first write a config file.
     >>> config_filename = os.path.join("/tmp", service_name + "_d.cfg") 
     >>> fp=open(config_filename,"w")  # and the suffix for the development stage.
     >>> written = fp.write("[GLOBAL]" + os.linesep)   
-    >>> written = fp.write("pattern_language = DE")   # They follow the ini syle (ms-world) for
+    >>> written = fp.write("pattern_language = DE" + os.linesep)   # They follow the ini syle (ms-world) for
+    >>> written = fp.write("LOGGING = DEBUG" + os.linesep)            # The logging level may be set
     >>> fp.close()                                    # configuration files.
     >>> os.environ["BASIC_CONFIGFILE_DIR"] = "/tmp"   # you can overwrite the path to the config file
 
@@ -177,7 +190,11 @@ The configuration Data is available - and could be read from the application.
     >>> assert(ps.basic.Config.config_parser['GLOBAL']['pattern_language'] == 'DE')
 
 
-Cleanup the test environment. ....
+Using ps_herald those log messages would be displayed as given in the following picture: 
+
+.. image:: logging2.png
+
+.. Cleanup the test environment. ....
 
     >>> if os.path.isfile(ps.basic.Config.lock_file_name):
     ...     os.remove(ps.basic.Config.lock_file_name) # just cleanup the test environment
@@ -189,9 +206,9 @@ Easing setup for service locking
 ================================
 
 To guard against multiple service instances running in parallel, the ``guarded_by_lockfile``
- Flag isused.
+ Flag is used.
 
-If the Basic singleton is instantiated with this flag  
+If the Basic singleton is instantiated with this flag, 
 
     >>> Basic(service_name, guarded_by_lockfile = True) # doctest:+ELLIPSIS
     <ps.basic.Config.Basic object at ...>
@@ -200,6 +217,8 @@ it stores it's PID in ``ps.basic.Config.lock_file_name``
 
     >>> pid = open(ps.basic.Config.lock_file_name,"r").read()
     >>> assert(int(pid) == os.getpid()) 
+
+.. Reset the environment ...
     >>> reset_singleton()
 
 If the start of the service finds a running instance, the instantiation will raise an error.
@@ -213,7 +232,132 @@ If there is no running instance, the lock file will be deleted.
 
 This makes sure, that always only one instance of the service is running on the local machine.
  
+Using ps_herald those log messages would be displayed as given in the following picture: 
 
-Easing setup for documentation and implementation 
-=================================================
+.. image:: logging3.png
+
+Finite State Machine
+====================
+
+Designing/Testing/integrating and Implementing a service is a complex business.
+Version Numbers of the service implementation itself - or used libraries/methods are crucial.
+
+Using Finite State Machines as Model is a good "ComputerScience" Modelling Environment.
+
+
+A visual representaion of the beyond implemented FinitStateMachine is giving below.
  
+.. image:: TheMachine.svg
+
+The picture is generated in section :ref:`Documenting the Finite State Machine <Documenting the Finite State Machine>`
+
+In the following sections:
+      - We show how to import the needed modules/methods
+      - define handler_functions for the states 
+      - define states  using those handler_functions for the states
+
+
+
+---------------------------------------------------
+Importing the Finite State Machines Modules/methods
+---------------------------------------------------
+To import  the fsm functionality we do:
+
+   >>> from ps.basic.State import State, StateError
+   >>> from ps.basic.fsm import FiniteStateMachine, TransitionError
+   >>> from ps.basic.get_graph import get_graph
+
+---------------------------------
+Defining state visiting functions
+---------------------------------
+Now we define handler_functions, wich will be called on entering a state.
+
+A handler function  has two parameters :
+
+      - state : State #giving information on the entered state 
+      - context : dict #giving information on the dict beeing provided (initially empty in fsm.run() 
+
+   >>> def init_state_handler(state: State, context: dict) -> str:
+   ...   __doc__="""This is the documentation of init_state_handler"""
+   ...   context[state.name] = "visited"
+   ...   return "INIT_OK" 
+   >>> def state1_handler(state: State, context: dict) -> str:
+   ...   __doc__="""This is the documentation of state1_state_handler"""
+   ...   context[state.name] = "visited"
+   ...   return "STATE1_OK" 
+   >>> def error_state_handler(state: State, context: dict) -> str:
+   ...   __doc__="""This is the documentation of error_state_handler"""
+   ...   context[state.name] = "visited"
+   ...   return "ERROR_STATE_OK" 
+   >>> def fin_state_handler(state: State, context: dict) -> str:
+   ...   context[state.name] = "visited"
+   ...   return "FIN_STATE_OK" 
+
+
+---------------
+Defining states 
+---------------
+
+Given the now defined handler_functions, we are now able to define State variables using
+those handler functions.
+
+   >>> final = State("FINAL", fin_state_handler, final=True)
+   >>> error = State( "ERROR",error_state_handler, error=True,
+   ...     mail_addr='[{"A":"ror_handler@mail.company"}]',
+   ...     default=final,)   
+   >>> start = State("START", init_state_handler, initial=True, default=error)
+   >>> state1 = State("STATE1", state1_handler, default=error)
+
+The error state has an mail_addr attached. Entering that state will result in sending an email to that address.
+
+---------------------------------------------------
+Defining state changes as result of a state handler 
+---------------------------------------------------
+
+Now we have 4 State Instances named final, error, start and state1.
+Now we add transitions :
+
+   - if in state start  and init_state_handler() returns "INIT_OK" we switch to state state1 
+   - if in state state1 and state1_state_handler() returns "STATE1_OK" we switch to state final 
+   - if in state error  and error_state_handler() returns "ERROR_STATE_OK" we switch to state final 
+ 
+
+
+   >>> start["INIT_OK"] = state1
+   >>> state1["STATE1_OK"] = final
+   >>> error["ERROR_STATE_OK"] = final 
+
+--------------------------------
+Running the Finite State Machine
+--------------------------------
+   >>> fsm = FiniteStateMachine("TheMachine")
+   >>> fsm.add_state([start, state1, error, final])
+   >>> fsm.run({})
+
+The logging messages in herald are shown in the following picture.
+
+.. image:: Statemachine_logging.png
+
+------------------------------------
+Documenting the Finite State Machine
+------------------------------------
+A picture of the State machine could be generated and helps in communicating service behaviour.
+
+   >>> graph = get_graph(fsm)
+   >>> graph.draw(f"{fsm.name}.svg", prog="dot")
+
+
+.. Comment  Copy the file to the documentation environment
+   >>> assert os.path.isfile(f"{fsm.name}.svg") 
+   >>> from shutil import copyfile
+   >>> copyfile(f"{fsm.name}.svg", f"../docs/source/{fsm.name}.svg") 
+   '../docs/source/TheMachine.svg'
+
+
+
+.. image:: TheMachine.svg
+
+
+
+
+

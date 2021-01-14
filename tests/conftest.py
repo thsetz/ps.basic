@@ -1,6 +1,8 @@
-import pytest
 import os
+
 from ps.basic import DEV_STAGES
+
+import pytest
 
 
 @pytest.fixture(scope="module", params=DEV_STAGES.keys())

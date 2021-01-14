@@ -1,7 +1,5 @@
 def get_html_string(var_p: dict):
-    """ return html table structure for a data structure
-        (currently only dict) ."""
-
+    """Return html table structure for a data structure."""
     html_string = "<table>"
     for name, value in var_p.items():
         if type(value) is dict:
@@ -20,8 +18,7 @@ def get_html_string(var_p: dict):
 
 
 def hms_string(sec_elapsed: int):
-    """Utility to get the hour:minute:seceonds for an
-    elapsed period in seconds"""
+    """Return the hour:minute:seconds for a period in seconds."""
     h = int(sec_elapsed / (60 * 60))
     m = int(sec_elapsed % (60 * 60) / 60)
     s = sec_elapsed % 60
