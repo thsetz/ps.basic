@@ -30,7 +30,10 @@ In the next step it was decided to:
          - logging messages e.g inform interested parties that something happened e.g using  email via stage_specific configuration files (easily added to versioning control)
          - lost heartbeats of monitored services putting their logging messages in the sqlite database on a node
   
- - add a finite state machine environment to the ps.basic package easing implementation/documentation and testing  of services.
+ - add a finite state machine environment to the ps.basic package 
+
+   - easing putting structure to the implementation 
+   - a graphical representation based on `pygraphviz <https://pypi.org/project/pygraphviz/>`_ was added - generating the image from the implementation. 
 
 Those mechanisms where implemented compatible to python 2.4. Having a package major version numbers 0 e.g. 0.x.x and are used in daily production.
 

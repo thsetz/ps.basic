@@ -12,7 +12,16 @@ os.environ["IS_TESTING"] = "YES"
 
 
 def f(state: State, context: dict) -> str:
-    """transition_func."""
+    """[summary]
+
+    transition_func.
+    :param state: [description]
+    :type state: State
+    :param context: [description]
+    :type context: dict
+    :return: [description]
+    :rtype: str
+    """
     context[state.name] = "visited"
     #    print(state.name)
     d = {}
@@ -27,7 +36,10 @@ def f(state: State, context: dict) -> str:
 
 
 def test_attributes_are_set():
-    """test_attributes_are_set."""
+    """[summary]
+
+    test_attributes_are_set.
+    """
     global f
     final = State("FINAL", f, final=True)
     assert final.name == "FINAL"
@@ -39,7 +51,10 @@ def test_attributes_are_set():
 
 
 def test_default_transition_is_set():
-    """test_default_transition_is_set."""
+    """[summary]
+
+    test_default_transition_is_set.
+    """
     global f
     final = State("FINAL", f, final=True)
     initial = State("INITIAL", f, initial=True, default=final)
@@ -47,7 +62,10 @@ def test_default_transition_is_set():
 
 
 def test_strings_for_input_alphabet_could_be_set():
-    """test_strings_for_input_alphabet_could_be_set."""
+    """[summary]
+
+    test_strings_for_input_alphabet_could_be_set.
+    """
     global f
     final = State("FINAL", f, final=True)
     intermediate = State("INTERMEDIATE", f)
@@ -56,14 +74,20 @@ def test_strings_for_input_alphabet_could_be_set():
 
 
 def test_wrong_result_state_on_input_raise_error():
-    """test_wrong_result_state_on_input_raise_error."""
+    """[summary]
+
+    test_wrong_result_state_on_input_raise_error.
+    """
     with pytest.raises(StateError):
         intermediate = State("INTERMEDIATE", f)
         intermediate["input2"] = "xx"
 
 
 def test_repr_works():
-    """test_repr_works."""
+    """[summary]
+
+    test_repr_works.
+    """
     global f
     final = State("FINAL", f, final=True)
     x = repr(final)

@@ -277,20 +277,20 @@ A handler function  has two parameters :
       - state : State #giving information on the entered state 
       - context : dict #giving information on the dict beeing provided (initially empty in fsm.run() 
 
-   >>> def init_state_handler(state: State, context: dict) -> str:
+   >>> def init_state_handler(state: State, context_p: dict) -> str:
    ...   __doc__="""This is the documentation of init_state_handler"""
-   ...   context[state.name] = "visited"
+   ...   context_p[state.name] = "visited"
    ...   return "INIT_OK" 
-   >>> def state1_handler(state: State, context: dict) -> str:
+   >>> def state1_handler(state: State, context_p: dict) -> str:
    ...   __doc__="""This is the documentation of state1_state_handler"""
-   ...   context[state.name] = "visited"
+   ...   context_p[state.name] = "visited"
    ...   return "STATE1_OK" 
-   >>> def error_state_handler(state: State, context: dict) -> str:
+   >>> def error_state_handler(state: State, context_p: dict) -> str:
    ...   __doc__="""This is the documentation of error_state_handler"""
-   ...   context[state.name] = "visited"
+   ...   context_p[state.name] = "visited"
    ...   return "ERROR_STATE_OK" 
-   >>> def fin_state_handler(state: State, context: dict) -> str:
-   ...   context[state.name] = "visited"
+   >>> def fin_state_handler(state: State, context_p: dict) -> str:
+   ...   context_p[state.name] = "visited"
    ...   return "FIN_STATE_OK" 
 
 

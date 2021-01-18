@@ -1,4 +1,4 @@
-"""test_ps_basic_fsm."""
+"""Tests for the ps.basic.fsm."""
 import os
 import pprint
 
@@ -21,7 +21,16 @@ from ps.basic.get_graph import get_graph  # noqa: E402
 
 
 def f(state: State, context: dict) -> str:
-    """test_no_initial_stage_raise_Attribute_error."""
+    """[summary]
+
+    test_no_initial_stage_raise_Attribute_error.
+    :param state: [description]
+    :type state: State
+    :param context: [description]
+    :type context: dict
+    :return: [description]
+    :rtype: str
+    """
     context[state.name] = "visited"
     print(state.name)
     context[state.name] = state.name
@@ -35,7 +44,10 @@ def f(state: State, context: dict) -> str:
 
 
 def test_no_initial_stage_raise_attribute_error():
-    """test_no_initial_stage_raise_Attribute_error."""
+    """[summary]
+
+    test_no_initial_stage_raise_Attribute_error.
+    """
     stage1 = State("STAGE1", f)
     fsm = FiniteStateMachine("TheMachine")
     fsm.add_state([stage1])
@@ -44,7 +56,10 @@ def test_no_initial_stage_raise_attribute_error():
 
 
 def test_input_not_in_alphabet_raises_transition_error():
-    """test_no_initial_stage_raise_Attribute_error."""
+    """[summary]
+
+    test_no_initial_stage_raise_Attribute_error.
+    """
     stage1 = State("STAGE1", f)
     fsm = FiniteStateMachine("TheMachine")
     fsm.add_state([stage1])
@@ -53,7 +68,10 @@ def test_input_not_in_alphabet_raises_transition_error():
 
 
 def test_multiple_initial_stages_raise_transition_error():
-    """test_no_initial_stage_raise_Attribute_error."""
+    """[summary]
+
+    test_no_initial_stage_raise_Attribute_error.
+    """
     start = State(
         "START",
         f,
@@ -70,7 +88,10 @@ def test_multiple_initial_stages_raise_transition_error():
 
 
 def test_attributes_are_set():
-    """test_no_initial_stage_raise_Attribute_error."""
+    """[summary]
+
+    test_no_initial_stage_raise_Attribute_error.
+    """
     #    #reset_singleton()
     #    #Config.Basic(TEST_SERVICE_NAME)
     final = State("FINAL", f, final=True)
@@ -112,7 +133,10 @@ def test_attributes_are_set():
 # Graph Printing
 #
 def test_get_graph_without_initi_state_raises_stateerror():
-    """test_no_initial_stage_raise_Attribute_error."""
+    """[summary]
+
+    test_no_initial_stage_raise_Attribute_error.
+    """
     final = State("FINAL", f, final=True)
     fsm = FiniteStateMachine("TheMachine")
     fsm.add_state([final])

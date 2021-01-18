@@ -1,4 +1,4 @@
-__doc__ = """ The Basic Module delivers the *Basis* for Systems in the Production
+__doc__ = """ The Config Module delivers the *Basis* for Systems in the Production
      Systems world."""
 
 import logging
@@ -53,6 +53,14 @@ PATTERN_LANGUAGE = "EN"
 
 
 def sighup_handler(signum: int, frame):
+    """[summary]
+
+    :param signum: [description]
+    :type signum: int
+    :param frame: [description]
+    :type frame: [type]
+    :raises ForbiddenInitialisationOfSingleton: [description]
+    """
     global config_parser, logger
     if config_parser != not_yet_defined:
         logger.debug(
@@ -66,10 +74,18 @@ def sighup_handler(signum: int, frame):
         )
 
 
+# Enable the signal handler
 signal.signal(signal.SIGHUP, sighup_handler)
 
 
 def log_config_data(config_parser: ConfigParser, logger: logging.Logger):
+    """[summary]
+
+    :param config_parser: [description]
+    :type config_parser: ConfigParser
+    :param logger: [description]
+    :type logger: logging.Logger
+    """
     html_string = "<table>"
     for section_name in config_parser.sections():
         html_string += "<tr><td>%s</td></tr>" % (section_name)
@@ -91,7 +107,68 @@ def log_config_data(config_parser: ConfigParser, logger: logging.Logger):
 
 
 class Basic(object):
-    """The Basic Class."""
+    """[summary]
+
+    :param service_name_p: name of the service
+    :type service_name_p: str
+    :param have_config_file: [force usage of config file], defaults to False
+    :type have_config_file: bool, optional
+    :param guarded_by_lockfile: [create/check lockfile], defaults to False
+    :type guarded_by_lockfile: bool, optional
+    :param have_herald_url_in_config_file: [ force usage of \
+        herald_url in config], defaults to False
+    :type have_herald_url_in_config_file: bool, optional
+    :raises ForbiddenInitialisationOfSingleton: [description]
+    :raises ForbiddenInitialisationOfSingleton: [description]
+
+    The Basic Class delivers the *Basis* for Systems in the Production System
+    world.
+
+       It enforces the same patterns for:
+         - logging
+         - configuration files
+         - and maybe more
+
+       throughout the different development stages.
+
+       **Example Usage**
+
+       >>> from ps.basic import Config
+       >>> import os
+       >>> project_name='ps'
+       >>> dev_stage='DEVELOPMENT'
+       >>> # DEV_STAGE has to be defined in the environment. Error else
+       >>> os.environ["DEV_STAGE"]=dev_stage
+       >>> # configuration files are built from the projects name
+       >>> # and a shortcut for the development stage.
+       >>> # They follow the ini syle (ms-world) for
+       >>> # configuration files.
+       >>> fp=open(os.path.join("/tmp", project_name + "_d.cfg"),"w")
+       >>> written = fp.write("[GLOBAL]" + os.linesep)
+       >>> written = fp.write("pattern_language=EN")
+       >>> fp.close()
+       >>> # you can set the directory, where config files live
+       >>> os.environ["BASIC_CONFIGFILE_DIR"] = "/tmp"
+       >>> singleton=Config.Basic(project_name,have_config_file = True)
+       >>> Config.config_file_name
+       '/tmp/ps_d.cfg'
+       >>> assert(Config.config_file_name == "/tmp/ps_d.cfg")
+       >>> my_version="0.0.alpha"
+       >>> # Will leave an Info level log message in the local log file
+       >>> # as in the (DEV_STAGE) central Log-Server/herald"
+       >>> logger = Config.logger
+       >>> logger.info("Hello LoggingWorld",
+       ...      extra={"package_version":my_version})
+       >>> # The application level access should occure via the
+       >>> # provided class variables to read the config file
+       >>> Config.config_parser.sections()
+       ['GLOBAL']
+       >>> Config.config_parser.items('GLOBAL')
+       [('pattern_language', 'EN')]
+       >>> # put logging messages to stdout too
+       >>> singleton.verbose()
+
+    """
 
     _instance = None
 
@@ -102,7 +179,10 @@ class Basic(object):
         have_config_file: bool = False,
         guarded_by_lockfile: bool = False,
     ):
-        """Create the singleton."""
+        """[summary]
+
+        Create the singleton.
+        """
         global service_name, dev_stage, suffix, logging_port
         global logging_bridge_port, webserver_port, logging_bridge_port
         global logging_level, log_file_name, logger, config_file_name
@@ -186,7 +266,18 @@ class Basic(object):
             )
 
     def __handle_configfile__(self, have_herald_url_in_config_file: bool):
-        """Integrate the configfile."""
+        """[summary]
+
+        :param have_herald_url_in_config_file: [description]
+        :type have_herald_url_in_config_file: bool
+        :raises ForbiddenInitialisationOfSingleton: [description]
+        :raises ForbiddenInitialisationOfSingleton: [description]
+        :raises e: [description]
+        :raises e: [description]
+        :raises e: [description]
+        :raises ForbiddenInitialisationOfSingleton: [description]
+        :raises ForbiddenInitialisationOfSingleton: [description]
+        """
         global config_parser, config_file_name, PATTERN_LANGUAGE
         global config_file_directory, primary_herald_url
         config_file_directory = os.getenv("BASIC_CONFIGFILE_DIR", False)
@@ -250,7 +341,8 @@ class Basic(object):
                 s = "Value of herald_url in GLOBAL section of "
                 s += f"{config_file_name} not given - but needed. EXIT NOW"
                 logger.fatal(
-                    s, extra={"package_version": __version__},
+                    s,
+                    extra={"package_version": __version__},
                 )
                 sys.stderr.write(s)
                 raise ForbiddenInitialisationOfSingleton(s)
@@ -260,7 +352,8 @@ class Basic(object):
                 s = "Value of pattern_language in GLOBAL section of "
                 s += f"{config_file_name}  not allowed. EXIT NOW"
                 logger.fatal(
-                    s, extra={"package_version": __version__},
+                    s,
+                    extra={"package_version": __version__},
                 )
                 sys.stderr.write(s)
                 raise ForbiddenInitialisationOfSingleton(s)
@@ -283,7 +376,11 @@ class Basic(object):
         log_config_data(config_parser, logger)
 
     def __handle_lockfile__(self):
-        """Handle lockfile."""
+        """[summary]
+
+        :raises LockedInitialisationOfSingleton: [description]
+        :raises LockedInitialisationOfSingleton: [description]
+        """
         global i_have_lock, logger, is_testing, lock_file_name
 
         def init_lockfile(fq_path_to_lockfile_p):
@@ -325,7 +422,7 @@ class Basic(object):
                 logger.info(s, extra={"package_version": __version__})
                 raise LockedInitialisationOfSingleton(s)
             except OSError:
-                s = "process with pid {pid}s is not alive:\
+                s = f"process with pid {pid}s is not alive:\
                      Will Remove the lock file"
                 logger.error(
                     s,
@@ -336,12 +433,11 @@ class Basic(object):
                 raise LockedInitialisationOfSingleton(s)
 
     def verbose(self):
-        """Print log messages to stdout too."""
+        """[summary]
+
+        Logging messages additionally will be sent to stderr.
+        """
         global logger
-        # if logger == not_yet_defined:
-        #    raise ForbiddenInitialisationOfSingleton(
-        #        "verbose called but module not yet initiated"
-        #    )
         ch = logging.StreamHandler()
         ch.setLevel(logging.DEBUG)
         formater = logging.Formatter("%(asctime)s   %(lineno)d - %(message)s")
@@ -349,7 +445,15 @@ class Basic(object):
         logger.addHandler(ch)
 
     def __exit__(self, exc_type, exc_value, traceback):
-        """Allow to use in with."""
+        """[summary]
+
+        :param exc_type: [description]
+        :type exc_type: [type]
+        :param exc_value: [description]
+        :type exc_value: [type]
+        :param traceback: [description]
+        :type traceback: [type]
+        """
         if exc_type == 1 and exc_value == 2 and traceback == 3:
             try:
                 if os.path.isfile(lock_file_name):
@@ -373,17 +477,33 @@ class Basic(object):
 
     def __del__(self):
         """Allow to use in with."""
-#        #pass
-#        # rudiments from python2 - seems to be not needed any longer
+        #        #pass
+        #        # rudiments from python2 - seems to be not needed any longer
         if i_have_lock:
             self.__exit__(1, 2, 3)
 
 
 class ContextFilter(logging.Filter):
-    """Merges additional values into the logging message."""
+    """[summary]
+
+    Merges additional values into the logging message.
+
+    :param logging: [description]
+    :type logging: [type]
+    :return: [description]
+    :rtype: [type]
+    """
 
     def filter(self, record):
-        """Filter log msg."""
+        """[summary]
+
+        Add additional field to a log message.
+
+        :param record: [description]
+        :type record: [type]
+        :return: [description]
+        :rtype: [type]
+        """
         if "package_version" not in record.__dict__:
             record.package_version = "undef"
         record.SYSTEM_ID = os.getenv("SYSTEM_ID", "None")
@@ -396,25 +516,56 @@ class ContextFilter(logging.Filter):
 
 
 class LockedInitialisationOfSingleton(Exception):
-    """Exception Handler."""
+    """Exception raised if the start of a service finds an existing lockfile.
 
-    def __init__(self, message):
-        """Write a message."""
+    :param Exception: [description]
+    :type Exception: [type]
+    """
+
+    def __init__(self, message: str):
+        """Write a message.
+
+        :param message: [description]
+        :type message: [str]
+        """
         self.message = message
 
 
 class ForbiddenInitialisationOfSingleton(Exception):
-    """Exception Handler."""
+    """Exception raised if the start of a Service is not possible.
+
+    :param Exception: [description]
+    :type Exception: [type]
+    """
 
     def __init__(self, message):
-        """Write a message."""
+        """[summary]
+
+        :param message: [description]
+        :type message: [type]
+        """
         self.message = message
 
 
 def template_writer(
     patterns_p: dict, pattern_offset_p: dict, pattern_p: dict, d_vars_p: dict
 ):
-    """Template writer."""
+    """
+
+    Template writer used to generate strings based on the Pattern module.
+
+    :param patterns_p: [description]
+    :type patterns_p: dict
+    :param pattern_offset_p: [description]
+    :type pattern_offset_p: dict
+    :param pattern_p: [description]
+    :type pattern_p: dict
+    :param d_vars_p: [description]
+    :type d_vars_p: dict
+    :raises KeyError: [description]
+    :return: [description]
+    :rtype: [type]
+    """
     try:
         template = patterns_p[pattern_offset_p][pattern_p]
         return template % (d_vars_p)
@@ -427,7 +578,16 @@ def template_writer(
 
 
 def ps_shell(cmd_p: str, env_p: dict = None):
-    """ """
+    """
+    Execute a command in a spawned Process.
+
+    :param cmd_p: [cmd to be executed ]
+    :type cmd_p: str
+    :param env_p: [environment to use], defaults to None
+    :type env_p: dict, optional
+    :return: [(out, err, exit, time_needed)]
+    :rtype: [tuple]
+    """
     global logger, service_name
     success = "SUCCESS"
     start_time = time.time()
@@ -447,7 +607,7 @@ def ps_shell(cmd_p: str, env_p: dict = None):
     if exitcode != 0:
         success = "ERROR"
     logger.debug(
-        "%s %s %s " % (success, time_needed, cmd_p),
+        f"{success} {time_needed}  {cmd_p}",
         extra={"package_version": __version__},
     )
     if exitcode != 0:
@@ -465,7 +625,15 @@ def ps_shell(cmd_p: str, env_p: dict = None):
 
 
 def exec_interpreter_from_string(source_code: str):
-    """"""
+    """Execute  a given python programm in a new spawned python interpreter.
+
+    :param source_code: [python source code]
+    :type source_code: str
+    :return: [(out, err, exit, time_needed)]
+    :rtype: [tuple]
+
+
+    """
     tmp = tempfile.NamedTemporaryFile(mode="w+t")
     try:
         tmp.write(source_code)

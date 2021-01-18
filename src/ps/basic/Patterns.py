@@ -6,6 +6,10 @@ __doc__ = """
    -  commands (Remote/local)
    -  Email messages (subject and text)
    -  logging messages
+
+   It is here for backward compatibility only.
+
+   Actual implementations should use config files to get those patterns.
 """
 
 PATTERN_LANGUAGES = ["DE", "EN"]

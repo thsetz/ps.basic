@@ -1,3 +1,4 @@
+"""Tests for the ps_shell_log."""
 import sys
 
 from ps.basic import ps_shell_log
@@ -11,6 +12,13 @@ SERVICE_NAME = "A_SERVICE_NAME"
 
 
 def test_ps_1(dev_allowed_stages, capsys):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    :param capsys: [description]
+    :type capsys: [type]
+    """
     reset_singleton()
     sys.argv = [
         "ps_shell_log",
@@ -30,7 +38,14 @@ def test_ps_1(dev_allowed_stages, capsys):
 
 
 def test_ps_shell_log_forced_configfile_not_given(dev_allowed_stages, capsys):
-    """have_config_file is set to True BUT a config_file is not provided."""
+    """[summary]
+
+    have_config_file is set to True BUT a config_file is not provided.
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    :param capsys: [description]
+    :type capsys: [type]
+    """
     reset_singleton()
     sys.argv = [
         "ps_shell_log",

@@ -1,3 +1,4 @@
+"""Tests for the Config Module."""
 import os
 import signal
 import sys
@@ -24,8 +25,13 @@ os.environ["IS_TESTING"] = "YES"
 
 
 def test_that_an_reinitialization_of_the_singleton_raises_an_error(
-    dev_allowed_stages,
+    dev_allowed_stages
 ):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    """
     with pytest.raises(Config.ForbiddenInitialisationOfSingleton):
         b = Config.Basic(TEST_SERVICE_NAME)  # Should be  OK
         assert b
@@ -33,6 +39,11 @@ def test_that_an_reinitialization_of_the_singleton_raises_an_error(
 
 
 def test_service_names_with_wrong_stage_name_raise_error(dev_wrong_stages):
+    """[summary]
+
+    :param dev_wrong_stages: [description]
+    :type dev_wrong_stages: [type]
+    """
     reset_singleton()
     with pytest.raises(Config.ForbiddenInitialisationOfSingleton):
         assert Config.service_name == "not_yet_defined"
@@ -40,6 +51,11 @@ def test_service_names_with_wrong_stage_name_raise_error(dev_wrong_stages):
 
 
 def test_properties_are_set(dev_allowed_stages):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    """
     reset_singleton()
     Config.Basic(TEST_SERVICE_NAME)
     common_Config_class_attributes_after_initialisation(dev_allowed_stages)
@@ -52,6 +68,11 @@ def test_properties_are_set(dev_allowed_stages):
 def test_verbose_mode_with_uninitialized_singleton_raises_error(
     dev_allowed_stages,
 ):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    """
     reset_singleton()
     with pytest.raises(TypeError):
         assert Config.service_name == "not_yet_defined"
@@ -61,6 +82,13 @@ def test_verbose_mode_with_uninitialized_singleton_raises_error(
 def test_verbose_mode_with_writes_logging_messages_to_stdout_too(
     dev_allowed_stages, capsys
 ):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    :param capsys: [description]
+    :type capsys: [type]
+    """
     reset_singleton()
     singleton = Config.Basic(TEST_SERVICE_NAME)
     singleton.verbose()
@@ -75,9 +103,16 @@ def test_verbose_mode_with_writes_logging_messages_to_stdout_too(
 #
 # CONFIG FILE THINGS
 #
-def test_not_existing_config_file_directory_raises_error(
-    dev_allowed_stages, capsys
-):
+def test_not_existing_config_file_directory_raises_error(dev_allowed_stages,
+                                                         capsys
+                                                         ):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    :param capsys: [description]
+    :type capsys: [type]
+    """
     reset_singleton()
     config_file_directory = "/foobar"
     os.environ["BASIC_CONFIGFILE_DIR"] = config_file_directory
@@ -91,6 +126,13 @@ def test_not_existing_config_file_directory_raises_error(
 
 
 def test_config_file_in_local_directory(dev_allowed_stages, capsys):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    :param capsys: [description]
+    :type capsys: [type]
+    """
     reset_singleton()
     os.environ["BASIC_CONFIGFILE_DIR"] = ""
     del os.environ["BASIC_CONFIGFILE_DIR"]
@@ -106,14 +148,20 @@ def test_config_file_in_local_directory(dev_allowed_stages, capsys):
     common_Config_class_attributes_after_initialisation(dev_allowed_stages)
     assert Config.primary_herald_url == ""
 
-    assert Config.config_file_name == os.path.join(
-        os.getcwd(), config_file_name
-    )
+    assert Config.config_file_name == os.path.join(os.getcwd(),
+                                                   config_file_name)
     assert "test_section" in Config.config_parser.sections()
     assert "test_value" == Config.config_parser["test_section"]["test_name"]
 
 
 def test_config_file_in_local_directory_not_given(dev_allowed_stages, capsys):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    :param capsys: [description]
+    :type capsys: [type]
+    """
     reset_singleton()
     os.environ["BASIC_CONFIGFILE_DIR"] = ""
     del os.environ["BASIC_CONFIGFILE_DIR"]
@@ -129,6 +177,13 @@ def test_config_file_in_local_directory_not_given(dev_allowed_stages, capsys):
 
 
 def test_config_file_in_directory(dev_allowed_stages, capsys):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    :param capsys: [description]
+    :type capsys: [type]
+    """
     reset_singleton()
     config_file_directory = "/tmp"
     config_file_name = os.path.join(
@@ -152,6 +207,13 @@ def test_config_file_in_directory(dev_allowed_stages, capsys):
 def test_wrong_formated_config_files_in_directory_raise_error(
     dev_allowed_stages, capsys
 ):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    :param capsys: [description]
+    :type capsys: [type]
+    """
     reset_singleton()
     config_file_directory = "/tmp"
     config_file_name = os.path.join(
@@ -170,13 +232,19 @@ def test_wrong_formated_config_files_in_directory_raise_error(
 
     assert Config.config_file_name == config_file_name
     assert "MissingSectionHeaderError" in get_data_of_file(
-        Config.log_file_name
-    )
+        Config.log_file_name)
 
 
 def test_forced_config_file_raises_error_on_impossible_pattern_language(
     dev_allowed_stages, capsys
 ):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    :param capsys: [description]
+    :type capsys: [type]
+    """
     reset_singleton()
     config_file_directory = "/tmp"
     config_file_name = os.path.join(
@@ -197,6 +265,13 @@ def test_forced_config_file_raises_error_on_impossible_pattern_language(
 def test_forced_config_file_reads_herald_url_and_pattern_language(
     dev_allowed_stages, capsys
 ):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    :param capsys: [description]
+    :type capsys: [type]
+    """
     reset_singleton()
     config_file_directory = "/tmp"
     config_file_name = os.path.join(
@@ -226,9 +301,15 @@ def test_forced_config_file_reads_herald_url_and_pattern_language(
     assert "localhost" in get_data_of_file(Config.log_file_name)
 
 
-def test_forced_config_file_but_herald_url_is_not_defined(
-    dev_allowed_stages, capsys
-):
+def test_forced_config_file_but_herald_url_is_not_defined(dev_allowed_stages,
+                                                          capsys):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    :param capsys: [description]
+    :type capsys: [type]
+    """
     reset_singleton()
     config_file_directory = "/tmp"
     config_file_name = os.path.join(
@@ -257,12 +338,26 @@ def test_forced_config_file_but_herald_url_is_not_defined(
 # SIGHUP HANDLER THINGS
 #
 def test_sighup_handler_singleton_uninitialized(dev_allowed_stages, capsys):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    :param capsys: [description]
+    :type capsys: [type]
+    """
     reset_singleton()
     with pytest.raises(Config.ForbiddenInitialisationOfSingleton):
         os.kill(os.getpid(), signal.SIGHUP)
 
 
 def test_sighup_handler_singleton_initialized(dev_allowed_stages, capsys):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    :param capsys: [description]
+    :type capsys: [type]
+    """
     reset_singleton()
     os.environ["BASIC_CONFIGFILE_DIR"] = ""
     del os.environ["BASIC_CONFIGFILE_DIR"]
@@ -289,6 +384,11 @@ def test_sighup_handler_singleton_initialized(dev_allowed_stages, capsys):
 # ps_shell THINGS
 #
 def test_ps_shell_ls(dev_allowed_stages):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    """
     reset_singleton()
     Config.Basic(TEST_SERVICE_NAME)
     out, err, exit_code, time_needed = Config.ps_shell("ls -a")
@@ -299,6 +399,11 @@ def test_ps_shell_ls(dev_allowed_stages):
 
 
 def test_ps_shell_impossible_cmd(dev_allowed_stages):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    """
     reset_singleton()
     Config.Basic(TEST_SERVICE_NAME)
     out, err, exit_code, time_needed = Config.ps_shell("impossible_command")
@@ -312,6 +417,11 @@ def test_ps_shell_impossible_cmd(dev_allowed_stages):
 # exec_interpreter THINGS
 #
 def test_exec_interpreter_from_string(dev_allowed_stages):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    """
     reset_singleton()
     Config.Basic(TEST_SERVICE_NAME)
     out, err, exit_code, time_needed = Config.exec_interpreter_from_string(
@@ -327,6 +437,11 @@ def test_exec_interpreter_from_string(dev_allowed_stages):
 # template_writer THINGS
 #
 def test_template_writer(dev_allowed_stages):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    """
     reset_singleton()
     Config.Basic(TEST_SERVICE_NAME)
     text = Config.template_writer(
@@ -339,6 +454,11 @@ def test_template_writer(dev_allowed_stages):
 
 
 def test_template_writer_(dev_allowed_stages):
+    """[summary]
+
+    :param dev_allowed_stages: [description]
+    :type dev_allowed_stages: [type]
+    """
     reset_singleton()
     Config.Basic(TEST_SERVICE_NAME)
 
@@ -349,6 +469,4 @@ def test_template_writer_(dev_allowed_stages):
             "PROD_LOCKED",
             {"snapshot_name": "tralala"},
         )
-    assert "unable to generate string" in get_data_of_file(
-        Config.log_file_name
-    )
+    assert "unable to generate strin" in get_data_of_file(Config.log_file_name)

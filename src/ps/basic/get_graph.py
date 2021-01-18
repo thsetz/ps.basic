@@ -5,7 +5,20 @@ from ps.basic.State import StateError
 
 
 def get_graph(fsm, title: str = None):
-    """Generate a DOT graph with pygraphviz."""
+    """Generate a png/svg.
+
+    Picture with dot - a graphviz executable.
+
+    Have a look at the Usage section for a working example.
+
+    :param fsm: [description]
+    :type fsm: [type]
+    :param title: [description], defaults to None
+    :type title: str, optional
+    :raises StateError: [description]
+    :return: [description]
+    :rtype: [type]
+    """
     import pygraphviz as pgv
 
     fsm_dot_attrs = {
@@ -82,9 +95,8 @@ def get_graph(fsm, title: str = None):
         fsm_graph.add_edge(src.name, dst.name, label=label)
     for state in fsm.states:
         if state.default_transition is not None:
-            if id(state.default_transition) in [
-                id(s) for s in fsm.error_states
-            ]:
+            if id(state.default_transition) in \
+                    [id(s) for s in fsm.error_states]:
                 fsm_graph.add_edge(
                     state.name,
                     state.default_transition.name,

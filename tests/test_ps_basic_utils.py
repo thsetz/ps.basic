@@ -1,3 +1,4 @@
+"""Tests for the ps.basic.util Module."""
 from ps.basic.utils import get_html_string, hms_string
 
 import pytest
@@ -17,6 +18,13 @@ import pytest
     ],
 )
 def test_html_string(test_input1, expected1):
+    """[summary]
+
+    :param test_input1: [description]
+    :type test_input1: [type]
+    :param expected1: [description]
+    :type expected1: [type]
+    """
     assert get_html_string(test_input1) == expected1
 
 
@@ -29,4 +37,11 @@ def test_html_string(test_input1, expected1):
     ],
 )
 def test_hms_string(test_input, expected):
+    """[summary]
+
+    :param test_input: [description]
+    :type test_input: [type]
+    :param expected: [description]
+    :type expected: [type]
+    """
     assert hms_string(test_input) == expected
