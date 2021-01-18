@@ -4,7 +4,7 @@ import os
 from setuptools import setup
 
 
-version = "1.2.9"
+version = "1.2.10"
 
 INSTALL_REQUIRES = ["setuptools", "docopt", "pygraphviz"]
 
