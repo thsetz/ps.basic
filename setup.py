@@ -18,10 +18,10 @@ setup(
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
-        "Intended Audience :: DevOps",
+        "Intended Audience :: Developers",
         "License :: Other/Proprietary License",
         "Operating System :: POSIX :: Linux",
-        "Programming Language :: Python :: 3.9 :: ",
+        "Programming Language :: Python :: 3.9",
         "Topic :: Software Development :: Build Tools",
         "Topic :: Utilities",
     ],
