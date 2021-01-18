@@ -30,6 +30,8 @@ VERBOSE = False
 
 
 def main():
+    """[summary]
+    """    
     global SERVICE_NAME, VERBOSE
     options = docopt.docopt(__doc__, version=version)
     if options["-v"]:
