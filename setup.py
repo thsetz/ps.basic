@@ -13,8 +13,6 @@ setup(
     version=version,
     description="Basic class used in PS environment",
     long_description=open("README.rst").read()
-    + "\n"    # noqa: W503
-    + open(os.path.join("CHANGES.txt")).read(),  # noqa: W503
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
