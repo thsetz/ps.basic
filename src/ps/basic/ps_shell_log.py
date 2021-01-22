@@ -30,8 +30,7 @@ VERBOSE = False
 
 
 def main():
-    """[summary]
-    """    
+    """Add Log to logging stream."""
     global SERVICE_NAME, VERBOSE
     options = docopt.docopt(__doc__, version=version)
     if options["-v"]:

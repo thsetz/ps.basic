@@ -1,23 +1,54 @@
 """Generic linux daemon base class for python 3.x."""
 
-import sys
-import os
-import time
 import atexit
+import os
 import signal
+import sys
+import time
 
 
-class daemon:
+class Daemon:
     """A generic daemon class.
 
-    Usage: subclass the daemon class and override the run() method."""
+    import os
+    import sys
+    from ps.basic.daemon import daemon
+    from ps.herald.ps_bridge import main
+    os.environ["DEV_STAGE"] = "DEVELOPMENT"
+
+    class MyDaemon(daemon):
+        def run(self):
+            sys.argv[0] = "ps_bridge"
+            sys.argv[1] = "-v"
+            sys.stdout = open('ps_bridge.olog', 'a+')
+            sys.stderr = open('ps_bridge.elog', 'a+')
+            main()
+
+
+    if __name__ == "__main__":
+        daemon = MyDaemon("/tmp/ps_bridge.pid")
+        if len(sys.argv) == 2:
+            if "start" == sys.argv[1]:
+                daemon.start()
+            elif "stop" == sys.argv[1]:
+                daemon.stop()
+            elif "restart" == sys.argv[1]:
+                daemon.restart()
+            else:
+                print("Unknown command")
+                sys.exit(2)
+            sys.exit(0)
+        else:
+            print("usage: %s start|stop|restart" % sys.argv[0])
+            sys.exit(2)
+    """
 
     def __init__(self, pidfile):
+        """Set the name of the pidfile."""
         self.pidfile = pidfile
 
     def daemonize(self):
-        """Deamonize class. UNIX double fork mechanism."""
-
+        """Deamonize the process."""
         try:
             pid = os.fork()
             if pid > 0:
@@ -61,11 +92,11 @@ class daemon:
         atexit.register(self.delpid)
 
     def delpid(self):
+        """Delete the pidfile."""
         os.remove(self.pidfile)
 
     def start(self):
         """Start the daemon."""
-
         # Check for a pidfile to see if the daemon already runs
         try:
             with open(self.pidfile, "r") as fp:
@@ -85,7 +116,6 @@ class daemon:
 
     def stop(self):
         """Stop the daemon."""
-
         # Get the pid from the pidfile
         try:
             with open(self.pidfile, "r") as fp:
@@ -119,7 +149,9 @@ class daemon:
         self.start()
 
     def run(self):
-        """You should override this method when you subclass Daemon.
+        """Xecute the provided function.
 
+        You should override this method when you subclass Daemon.
         It will be called after the process has been daemonized by
-        start() or restart()."""
+        start() or restart().
+        """
