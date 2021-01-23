@@ -166,7 +166,11 @@ Using ps_herald those log messages would be displayed as given in the following 
 
     The design decisions take this into account. Python2 versions of services should integrate 
     smoothly - as they use the same messages (techically pickled over network streams). 
+    
+    Even in the presence of python3 only modules  this approach should work.
 
+    The solution is **NOT** 42.validatet() - but ...
+     
      
     
 Easing setup for configuration files 
@@ -330,7 +334,7 @@ The error state has an mail_addr attached. Entering that state will result in se
 Defining state changes as result of a state handler 
 ---------------------------------------------------
 
-Now we have 4 State Instances named final, error, start and state1.
+Currently have 4 State Instances named final, error, start and state1.
 Now we add transitions :
 
    - if in state start  and init_state_handler() returns "INIT_OK" we switch to state state1 
@@ -342,6 +346,14 @@ Now we add transitions :
    >>> start["INIT_OK"] = state1
    >>> state1["STATE1_OK"] = final
    >>> error["ERROR_STATE_OK"] = final 
+
+   If a states handler_functions does **NOT** return a value inside it's states dict() 
+   the fsm will :
+
+     - (if defined): switch to the states (here start)  defined default state 
+       e.g. start = State("START", init_state_handler, initial=True, **default=error** )  
+       which is error
+     - else raise a TransitionError
 
 --------------------------------
 Running the Finite State Machine
