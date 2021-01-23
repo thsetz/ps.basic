@@ -1,6 +1,7 @@
 __doc__ = """ The Config Module delivers the *Basis* for Systems in the Production
      Systems world."""
 
+import atexit 
 import logging
 import logging.handlers
 import os
@@ -54,14 +55,18 @@ PATTERN_LANGUAGE = "EN"
 
 def sighup_handler(signum: int, frame):
     """[summary]
-
-    :param signum: [description]
+    On receipt of signal SIGHUP the configuration file will be read again
+    updating it's data - accessible by the application
+    via ps.basic.Config.config_parser.py.
+ 
+    :param signum: [signal number SIGHUP only]
     :type signum: int
     :param frame: [description]
     :type frame: [type]
     :raises ForbiddenInitialisationOfSingleton: [description]
     """
     global config_parser, logger
+    assert signum == signal.SIGHUP
     if config_parser != not_yet_defined:
         logger.debug(
             "SIGHUP Received. Print Configuration.",
@@ -422,7 +427,7 @@ class Basic(object):
                 logger.info(s, extra={"package_version": __version__})
                 raise LockedInitialisationOfSingleton(s)
             except OSError:
-                s = f"process with pid {pid}s is not alive:\
+                s = f"process with pid {pid} is not alive:\
                      Will Remove the lock file"
                 logger.error(
                     s,

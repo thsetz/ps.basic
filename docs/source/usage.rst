@@ -152,10 +152,23 @@ Using ps_herald those log messages would be displayed as given in the following 
 .. note::
    To get access to the ps logging environment, a module only needs to:
  
-      - instantiate  the ps.basic.Config.Basic class ( if not already done at  startup of the 
-        application)
+      - instantiate  the ps.basic.Config.Basic class, if not already done at  startup of the 
+        application. Instantiation has only one required parameter - the service name.
       - import the logger from ps.basic.Config
 
+    Additionaly, that logger e.g **logger.info("The logging message")** may be extended 
+    with an extra dict() e.g.
+
+      - logger,info("The logging message"**, extra={"package_version":TheOthersModules_versionNumber"}**) 
+
+    enabling the module to participate in the ps-monitoring environment *with it's verson number*.
+    This is a major requirement for ITIL. 
+
+    The design decisions take this into account. Python2 versions of services should integrate 
+    smoothly - as they use the same messages (techically pickled over network streams). 
+
+     
+    
 Easing setup for configuration files 
 ====================================
 
@@ -255,7 +268,10 @@ In the following sections:
       - We show how to import the needed modules/methods
       - define handler_functions for the states 
       - define states  using those handler_functions for the states
-
+      - **generate that picture from the implementations source code** -
+        as opposed to implement the behaviour as assumed by a third party 
+        picture. The here shown picture is **much closer** to what the service 
+        does. It can be checked within the dev_stage based monitoring environments.
 
 
 ---------------------------------------------------
