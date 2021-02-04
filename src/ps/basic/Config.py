@@ -121,6 +121,25 @@ def sighup_handler(signum: int, frame):
 signal.signal(signal.SIGHUP, sighup_handler)
 
 
+def get_logging_data():
+    """Provide the content of the current logfile."""
+    global  log_file_name, logger
+    if log_file_name == not_yet_defined:
+         raise SingletonNotInitialized(
+                    f"Unable to read the log file as it is not defined"
+         )
+    logging_data = ""
+    try:
+        with open(log_file_name,"r") as fp:
+            logging_data = fp.read()
+    except:
+            logger.exception(
+                f"Error reading log File {log_file_name}  version {__version__}" 
+            )
+     
+    return logging_data
+ 
+
 def log_config_data(config_parser: ConfigParser, logger: logging.Logger):
     """[summary]
 
@@ -312,12 +331,9 @@ class Basic(object):
 
         :param have_herald_url_in_config_file: [description]
         :type have_herald_url_in_config_file: bool
-        :raises ForbiddenInitialisationOfSingleton: [description]
-        :raises ForbiddenInitialisationOfSingleton: [description]
         :raises e: [description]
         :raises e: [description]
         :raises e: [description]
-        :raises ForbiddenInitialisationOfSingleton: [description]
         :raises ForbiddenInitialisationOfSingleton: [description]
         """
         global config_parser, config_file_name, PATTERN_LANGUAGE
@@ -556,6 +572,21 @@ class ContextFilter(logging.Filter):
         record.USER_SPEC_2 = os.getenv("USER_SPEC_2", "None")
         return True
 
+
+class SingletonNotInitialized(Exception):
+    """Exception raised if a function is called which needs an initialized State
+
+    :param Exception: [description]
+    :type Exception: [type]
+    """
+
+    def __init__(self, message: str):
+        """Write a message.
+
+        :param message: [description]
+        :type message: [str]
+        """
+        self.message = message
 
 class LockedInitialisationOfSingleton(Exception):
     """Exception raised if the start of a service finds an existing lockfile.

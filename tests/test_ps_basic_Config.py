@@ -97,7 +97,7 @@ def test_verbose_mode_with_writes_logging_messages_to_stdout_too(
     captured = capsys.readouterr()
     assert captured.out == ""
     assert msg in captured.err
-    assert msg in get_data_of_file(Config.log_file_name)
+    assert msg in Config.get_logging_data()
 
 
 #
@@ -120,9 +120,7 @@ def test_not_existing_config_file_directory_raises_error(dev_allowed_stages,
         Config.Basic(TEST_SERVICE_NAME, have_config_file=True)
     common_Config_class_attributes_after_initialisation(dev_allowed_stages)
     assert Config.config_file_name == "not_yet_defined"
-    assert "BASIC_CONFIGFILE_DIR /foobar not found." in get_data_of_file(
-        Config.log_file_name
-    )
+    assert "BASIC_CONFIGFILE_DIR /foobar not found." in Config.get_logging_data() 
 
 
 def test_config_file_in_local_directory(dev_allowed_stages, capsys):
@@ -231,8 +229,7 @@ def test_wrong_formated_config_files_in_directory_raise_error(
     assert Config.primary_herald_url == ""
 
     assert Config.config_file_name == config_file_name
-    assert "MissingSectionHeaderError" in get_data_of_file(
-        Config.log_file_name)
+    assert "MissingSectionHeaderError" in Config.get_logging_data() 
 
 
 def test_forced_config_file_raises_error_on_impossible_pattern_language(
@@ -296,9 +293,9 @@ def test_forced_config_file_reads_herald_url_and_pattern_language(
     assert "GLOBAL" in Config.config_parser.sections()
     assert "localhost" == Config.config_parser["GLOBAL"]["herald_url"]
     assert "DE" == Config.config_parser["GLOBAL"]["pattern_language"]
-    assert "GLOBAL" in get_data_of_file(Config.log_file_name)
-    assert "herald_url" in get_data_of_file(Config.log_file_name)
-    assert "localhost" in get_data_of_file(Config.log_file_name)
+    assert "GLOBAL" in Config.get_logging_data()
+    assert "herald_url" in Config.get_logging_data()
+    assert "localhost" in Config.get_logging_data()
 
 
 def test_forced_config_file_but_herald_url_is_not_defined(dev_allowed_stages,
@@ -330,8 +327,8 @@ def test_forced_config_file_but_herald_url_is_not_defined(dev_allowed_stages,
         )
     common_Config_class_attributes_after_initialisation(dev_allowed_stages)
 
-    assert "Value of herald_url" in get_data_of_file(Config.log_file_name)
-    assert "not given" in get_data_of_file(Config.log_file_name)
+    assert "Value of herald_url" in Config.get_logging_data()
+    assert "not given" in Config.get_logging_data() 
 
 
 #
@@ -373,10 +370,8 @@ def test_sighup_handler_singleton_initialized(dev_allowed_stages, capsys):
 
     Config.Basic(TEST_SERVICE_NAME, have_config_file=True)
     os.kill(os.getpid(), signal.SIGHUP)
-    assert "SIGHUP Received. Print Configuration." in get_data_of_file(
-        Config.log_file_name
-    )
-    print(get_data_of_file(Config.log_file_name))
+    assert "SIGHUP Received. Print Configuration." in Config.get_logging_data()
+    print(Config.get_logging_data())
     print(get_data_of_file(Config.config_file_name))
 
 
@@ -395,7 +390,7 @@ def test_ps_shell_ls(dev_allowed_stages):
     assert "LOG" in out
     assert err == [""]
     assert exit_code == 0
-    assert "ls -a" in get_data_of_file(Config.log_file_name)
+    assert "ls -a" in Config.get_logging_data()
 
 
 def test_ps_shell_impossible_cmd(dev_allowed_stages):
@@ -410,7 +405,7 @@ def test_ps_shell_impossible_cmd(dev_allowed_stages):
     assert out == [""]
     assert "impossible_command" in "".join(err)
     assert exit_code != 0
-    assert "impossible_command" in get_data_of_file(Config.log_file_name)
+    assert "impossible_command" in Config.get_logging_data()
 
 
 #
@@ -430,7 +425,7 @@ def test_exec_interpreter_from_string(dev_allowed_stages):
     assert "Hello World" in out
     assert err == [""]
     assert exit_code == 0
-    assert sys.executable in get_data_of_file(Config.log_file_name)
+    assert sys.executable in Config.get_logging_data()
 
 
 #
@@ -469,4 +464,4 @@ def test_template_writer_(dev_allowed_stages):
             "PROD_LOCKED",
             {"snapshot_name": "tralala"},
         )
-    assert "unable to generate strin" in get_data_of_file(Config.log_file_name)
+    assert "unable to generate strin" in Config.get_logging_data()

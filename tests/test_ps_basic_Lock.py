@@ -45,9 +45,7 @@ def test_properties_are_set_using_guarded_by_lockfile(
 
     Config.Basic(TEST_SERVICE_NAME, guarded_by_lockfile=True)
     common_Config_class_attributes_after_initialisation(dev_allowed_stages)
-    assert "started new lock guarded instance on" in get_data_of_file(
-        Config.log_file_name
-    )
+    assert "started new lock guarded instance on" in Config.get_logging_data() 
     assert Config.i_have_lock
     assert os.path.isfile(Config.lock_file_name)
     assert str(os.getpid()) in get_data_of_file(Config.lock_file_name)
@@ -61,7 +59,7 @@ def test_properties_are_set_using_guarded_by_lockfile(
     # time.sleep(1)
     with pytest.raises(Config.LockedInitialisationOfSingleton):
         Config.Basic(TEST_SERVICE_NAME, guarded_by_lockfile=True)
-        print(get_data_of_file(Config.log_file_name))
+        print(Config.get_logging_data)
     assert os.getpid() == int(get_data_of_file(Config.lock_file_name))
 
     # Write a wrong pid into the lock file ==> now the instantiation will
@@ -76,7 +74,7 @@ def test_properties_are_set_using_guarded_by_lockfile(
     reset_singleton(remove_log_file=False)
     with pytest.raises(Config.LockedInitialisationOfSingleton):
         Config.Basic(TEST_SERVICE_NAME, guarded_by_lockfile=True)
-    assert "Will Remove the lock fil" in get_data_of_file(Config.log_file_name)
+    assert "Will Remove the lock fil" in Config.get_logging_data()
     print("The lockFileName is X%sX" % (Config.lock_file_name))
     assert not os.path.isfile(Config.lock_file_name)
     assert not Config.i_have_lock  # ==> False
