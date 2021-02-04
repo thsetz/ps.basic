@@ -139,6 +139,8 @@ class FiniteStateMachine(object):
          >>> from ps.basic import Config
          >>> import os
          >>> os.environ["DEV_STAGE"] = "TESTING"
+         >>> from ps.basic.Config import reset_singleton  
+         >>> reset_singleton()
          >>> singleton=Config.Basic("fsm_test")
          >>> fsm.run(context)
 
@@ -180,6 +182,7 @@ class FiniteStateMachine(object):
     .. Comment  Copy the file to the documentation environment
        >>> assert os.path.isfile(f"{fsm.name}.svg")
        >>> from shutil import copyfile
+       >>> assert os.path.isdir("../docs/source")
        >>> copyfile(f"{fsm.name}.svg", f"../docs/source/{fsm.name}.svg")
        '../docs/source/ThedoctestMachine.svg'
 

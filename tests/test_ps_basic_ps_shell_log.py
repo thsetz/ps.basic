@@ -5,9 +5,9 @@ from ps.basic import ps_shell_log
 
 from t_utils import (
     common_Config_class_attributes_after_initialisation,
-    reset_singleton
+#    reset_singleton
 )
-
+from ps.basic.Config import reset_singleton
 SERVICE_NAME = "A_SERVICE_NAME"
 
 

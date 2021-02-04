@@ -1,7 +1,6 @@
 __doc__ = """ The Config Module delivers the *Basis* for Systems in the Production
      Systems world."""
 
-import atexit 
 import logging
 import logging.handlers
 import os
@@ -46,6 +45,45 @@ curr_mail_subject = not_yet_defined
 curr_mail_text = not_yet_defined
 is_testing = not_yet_defined
 i_have_lock = False
+
+
+import ps
+import logging
+import os
+from importlib import reload
+
+def reset_singleton(remove_log_file=True):
+    """Reset the singleton's state initial values while testing."""
+    if remove_log_file:
+        if os.path.isfile(ps.basic.Config.log_file_name):
+            os.remove(ps.basic.Config.log_file_name)
+    Config = reload(ps.basic.Config)  # noqa: N806
+    Config.Basic._instance = None
+    properties = [ 
+        "service_name",
+        "suffix",
+        "logging_port",
+        "logging_bridge_port",
+        "logging_level",
+        "log_file_name",
+        "logger",
+        "config_file_name",
+        "config_parser",
+        "dev_stage",
+        "herald_sqlite_filename",
+        "primary_herald_url",
+        "lock_file_name",
+        "curr_mail_sender",
+        "curr_mail_recipients",
+        "curr_mail_subject",
+        "curr_mail_text",
+    ]   
+    for property in properties:
+        assert Config.__dict__["%s" % (property)] == "not_yet_defined"
+    logging.shutdown()
+    reload(logging)
+
+
 
 
 MAX_SIZE_FOR_A_ROTATING_LOGFILE = 2000000
@@ -262,7 +300,6 @@ class Basic(object):
 
             if guarded_by_lockfile:
                 self.__handle_lockfile__()
-
             if have_config_file:
                 self.__handle_configfile__(have_herald_url_in_config_file)
         else:

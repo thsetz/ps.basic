@@ -12,9 +12,9 @@ from t_utils import (
     TEST_SERVICE_NAME,
     common_Config_class_attributes_after_initialisation,
     get_data_of_file,
-    reset_singleton,
+#    reset_singleton,
 )
-
+from ps.basic.Config import reset_singleton
 
 os.environ["IS_TESTING"] = "YES"
 
