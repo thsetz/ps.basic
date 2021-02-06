@@ -116,7 +116,8 @@ def sighup_handler(signum: int, frame):
             "SIGHUP Received. Print Configuration.",
             extra={"package_version": __version__},
         )
-        log_config_data(config_parser, logger)
+        #log_config_data(config_parser, logger)
+        log_config_data()
     else:
         raise ForbiddenInitialisationOfSingleton(
             "SIGHUP called but module not yet initiated"
@@ -146,7 +147,8 @@ def get_logging_data():
     return logging_data
  
 
-def log_config_data(config_parser: ConfigParser, logger: logging.Logger):
+#def log_config_data(config_parser: ConfigParser, logger: logging.Logger):
+def log_config_data():
     """[summary]
 
     :param config_parser: [description]
@@ -154,6 +156,7 @@ def log_config_data(config_parser: ConfigParser, logger: logging.Logger):
     :param logger: [description]
     :type logger: logging.Logger
     """
+    global config_parser, logger 
     html_string = "<table>"
     for section_name in config_parser.sections():
         html_string += "<tr><td>%s</td></tr>" % (section_name)
@@ -437,7 +440,8 @@ class Basic(object):
 
         # Call the modules sighup_handler which will write the configuration
         # data to the log
-        log_config_data(config_parser, logger)
+        #log_config_data(config_parser, logger)
+        log_config_data()
 
     def __handle_lockfile__(self):
         """[summary]
