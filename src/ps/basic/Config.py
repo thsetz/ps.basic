@@ -15,6 +15,12 @@ from configparser import (
     NoSectionError,
     ParsingError,
 )
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
+from email.utils import COMMASPACE, formatdate
+import email.encoders
+
 from socket import gethostname
 from subprocess import PIPE, Popen
 
@@ -717,3 +723,70 @@ def exec_interpreter_from_string(source_code: str):
         tmp.close()
 
     return out, err, exit, time_needed
+
+
+def send_a_mail(sent_from:str , l_send_to_p:list, subject:str, text:str, files:list=[], serverstr="localhost", test_only:bool=False):
+    assert isinstance(l_send_to_p, list)
+    assert isinstance(files, list)
+    global logger,curr_mail_recipients,curr_mail_sender,curr_mail_subject,curr_mail_text,dev_stage,__version__
+   
+    logger.debug(f"TRY send_mail FROM {sent_from}  TO {str(l_send_to_p)}   subject {subject}",extra={"package_version":__version__})
+
+    msg = MIMEMultipart('alternative')
+    msg['From'] = sent_from
+    msg['To'] = COMMASPACE.join(l_send_to_p)
+    msg['Date'] = formatdate(localtime=True)
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(text, 'plain'))
+    msg.attach(MIMEText(text, 'html'))
+
+    for f in files:
+        part = MIMEBase('application', "octet-stream")
+        part.set_payload(open(f, "rb").read())
+        email.encoders.encode_base64(part)
+        part.add_header(
+            'Content-Disposition', 'attachment; filename="%s"' %
+                                   os.path.basename(f))
+        msg.attach(part)
+
+    try:
+
+        if not test_only and dev_stage != "TESTING" and not os.environ["TESTING"]:
+                     smtp = smtplib.SMTP(server)
+                     smtp.sendmail(sent_from, l_send_to_p, msg.as_string())
+                     smtp.close()
+        else:
+                     curr_mail_sender      = sent_from
+                     curr_mail_recipients  = l_send_to_p
+                     curr_mail_subject     = subject
+                     curr_mail_text        = text
+
+        logger.debug(f"SUCC send_mail FROM {sent_from}  TO {str(l_send_to_p)}   subject {subject}",extra={"package_version":__version__})
+    except:
+        logger.debug(f"EXCEPTION send_mail FROM {sent_from}  TO {str(l_send_to_p)}   subject {subject}",exc_info=True, extra={"package_version":__version__})
+        sys.stdout.write("Exception Sending Email")
+        try:
+            logger.debug("Try To send via shell mail", extra={"package_version":__version__})
+            for dst in l_send_to_p:
+                cmd = ' echo "%s" | mail -s "%s" %s' % (text, subject, dst)
+                logger.debug("Try to send mail via shell {cmd}",extra={"package_version":__version__})
+                o, e, ex, t = ps_shell(cmd)
+                if int(ex) > 0:
+                    logger.error("FAILURE Mail via shell",extra={"package_version":__version__})
+                else:
+                    logger.info("SUCCESS Mail via shell to {dst}",extra={"package_version":__version__})
+        except:
+           logger.debug(f"EXCEPTION send_mail via shell  FROM {sent_from}  TO {str(l_send_to_p)}   subject {subject}",exc_info=True, extra={"package_version":__version__})
+
+
+
+
+
+
+
+
+
+
+
+

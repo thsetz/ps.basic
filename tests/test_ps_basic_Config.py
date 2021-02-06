@@ -465,3 +465,29 @@ def test_template_writer_(dev_allowed_stages):
             {"snapshot_name": "tralala"},
         )
     assert "unable to generate strin" in Config.get_logging_data()
+
+#
+# sebd_email THINGS
+#
+def test_send_email(dev_allowed_stages):
+    reset_singleton()
+    Config.Basic(TEST_SERVICE_NAME)
+    sender =  "test_env"
+    recipients =  ["test@b.de","test2@b.de"]
+    subject = "subject" 
+    text = "text"
+    files=[]
+    res = Config.send_a_mail(sender,recipients,subject,text,files,test_only=True)
+    print(res)
+    assert Config.curr_mail_sender == sender
+    assert Config.curr_mail_recipients == recipients 
+    assert Config.curr_mail_subject==subject 
+    assert Config.curr_mail_text==text
+     
+
+
+
+
+
+
+
