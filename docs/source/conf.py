@@ -22,7 +22,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
 
-from ps.basic import __version__
+__version__='1.2.17'
 
 try:
   from ConfigParser import SafeConfigParser, ParsingError

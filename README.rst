@@ -1,5 +1,5 @@
-Introduction
-============
+ps.basic :Version" |release|
+============================
 .. Setup
    >>> import pprint,os
 
