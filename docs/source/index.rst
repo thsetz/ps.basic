@@ -1,4 +1,4 @@
-Welcome to ps Basics |__version__| documentation
+Welcome to ps Basics |release| documentation
 ================================================
 
 Contents:
