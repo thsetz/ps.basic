@@ -1,7 +1,5 @@
-ps.basic :Version: |release|
-============================
-.. Setup
-   >>> import pprint,os
+ps.basic
+========
 
 
 The ps (Production System) packages implementation started in 2013. Given a non staged production environment - hosted on different operating Systems all around the globe the implementations first goal was to consolidate the widely spread scripts and standalone Programs - started via cron - under one umbrella. 
