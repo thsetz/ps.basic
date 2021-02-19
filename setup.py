@@ -5,7 +5,7 @@ from setuptools import setup
 
 version = "1.2.18"
 
-INSTALL_REQUIRES = ["setuptools", "docopt", "pygraphviz"]
+INSTALL_REQUIRES = ["docopt", "pygraphviz"]
 
 setup(
     name="ps.basic",
@@ -13,20 +13,20 @@ setup(
     description="Basic class used in PS environment",
     long_description=open("README.rst").read(),
     classifiers=[
-        "Development Status :: 4 - Beta",
-        "Environment :: Console",
-        "Intended Audience :: Developers",
-        "License :: Other/Proprietary License",
-        "Operating System :: POSIX :: Linux",
-        "Programming Language :: Python :: 3.9",
-        "Topic :: Software Development :: Build Tools",
-        "Topic :: Utilities",
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'Operating System :: MacOS',
+        'Operating System :: POSIX',
+        'Operating System :: Microsoft :: Windows',
+        'Programming Language :: Python :: 3.9',
+        'Topic :: Software Development',
+        'Topic :: Utilities',
     ],
     keywords="PS",
     author="Setz",
     author_email="thomas@setz.de",
     url="https://bitbucket.org/drsetz/ps.basic",
-    license="GPL",
+    license='"License :: OSI Approved :: GNU General Public License (GPL)', 
     packages=["ps.basic"],
     package_dir={"": "src"},
     # include_package_data=True,
