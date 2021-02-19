@@ -22,7 +22,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
 
-__version__='1.2.17'
+__version__='1.2.18'
 
 try:
   from ConfigParser import SafeConfigParser, ParsingError

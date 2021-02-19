@@ -3,7 +3,7 @@
 from setuptools import setup
 
 
-version = "1.2.17"
+version = "1.2.18"
 
 INSTALL_REQUIRES = ["setuptools", "docopt", "pygraphviz"]
 
