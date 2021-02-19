@@ -1,4 +1,4 @@
-ps.basic :Version" |release|
+ps.basic :Version: |release|
 ============================
 .. Setup
    >>> import pprint,os

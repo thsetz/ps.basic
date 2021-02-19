@@ -1,5 +1,5 @@
-Welcome to ps Basics's documentation!
-=====================================
+Welcome to ps Basics |__version__| documentation
+================================================
 
 Contents:
 
