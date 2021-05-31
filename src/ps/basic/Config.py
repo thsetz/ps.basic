@@ -302,9 +302,11 @@ class Basic(object):
             logger = logging.getLogger(service_name)
             my_filter = ContextFilter()
             logger.addFilter(my_filter)
+            HERALD_HOST = os.getenv("DIRECT_HERALD_HOST", "localhost")
             socket_handler = logging.handlers.SocketHandler(
-                "localhost", logging_port
-            )
+                                               HERALD_HOST, logging_port)
+            if not is_testing:
+                print(f'LOGGING TO {HERALD_HOST}')
             logger.addHandler(socket_handler)
             logfile_handler = logging.handlers.RotatingFileHandler(
                 log_file_name,
